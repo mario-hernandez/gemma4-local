@@ -1,6 +1,6 @@
 {
   "name": "gemma4-local",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Chat local con Gemma 4 via vMLX en Apple Silicon",
   "author": "Mario Hernandez",
   "main": "app/main.js",

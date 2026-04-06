@@ -224,7 +224,8 @@ ipcMain.handle('run-setup', () => {
         sendProgress('Installing vMLX engine (this may take 1-2 minutes)...');
 
         const pipBin = path.join(VENV_PATH, 'pip');
-        const installVmlx = spawn(pipBin, ['install', 'vmlx'], {
+        // Install vmlx + force latest mlx-lm (old versions don't support gemma4)
+        const installVmlx = spawn(pipBin, ['install', 'vmlx', 'mlx-lm>=0.31', 'mlx-vlm>=0.4'], {
           env: { ...process.env, PATH: FULL_PATH, VIRTUAL_ENV: VENV_DIR },
           stdio: ['ignore', 'pipe', 'pipe']
         });

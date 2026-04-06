@@ -127,26 +127,58 @@ window.api.onServerStatus((data) => {
 });
 
 const progressBar = $('#progress-bar');
+const logToggle = $('#log-toggle');
+
+if (logToggle) {
+  logToggle.addEventListener('click', () => {
+    loadingLog.classList.toggle('hidden');
+    logToggle.textContent = loadingLog.classList.contains('hidden') ? 'Show technical details' : 'Hide technical details';
+  });
+}
 
 window.api.onServerLog((msg) => {
   const lines = msg.split('\n').filter(l => l.trim());
   for (const line of lines) {
-    if (line.includes('Loading model')) {
-      loadingText.textContent = 'Loading model into GPU...';
-      if (progressBar) progressBar.style.animation = 'progressSlide 1.5s ease-in-out infinite';
+    // User-friendly status messages
+    if (line.includes('Fetching') && line.includes('files')) {
+      // Parse "Fetching 8 files: 12%|" or similar
+      const pctMatch = line.match(/(\d+)%/);
+      const pct = pctMatch ? parseInt(pctMatch[1]) : 0;
+      if (pct === 0) {
+        loadingText.textContent = 'Downloading the AI model (~5 GB). This only happens once...';
+      } else {
+        loadingText.textContent = `Downloading AI model... ${pct}%`;
+      }
+      if (progressBar) {
+        progressBar.style.animation = 'none';
+        progressBar.style.width = `${Math.max(pct, 5)}%`;
+        progressBar.style.marginLeft = '0';
+      }
+    }
+    else if (line.includes('HTTP Request: GET') && line.includes('huggingface')) {
+      // Don't change the text, just show activity
+    }
+    else if (line.includes('Loading model') || line.includes('Loading MLLM')) {
+      loadingText.textContent = 'Loading AI into memory. Your Mac may slow down for ~10 seconds...';
+      if (progressBar) { progressBar.style.animation = 'progressSlide 1.5s ease-in-out infinite'; }
     }
     else if (line.includes('MLLM loaded')) {
-      loadingText.textContent = 'Model loaded, starting server...';
-      if (progressBar) { progressBar.style.animation = 'none'; progressBar.style.width = '80%'; progressBar.style.marginLeft = '0'; }
+      loadingText.textContent = 'Almost ready...';
+      if (progressBar) { progressBar.style.animation = 'none'; progressBar.style.width = '90%'; progressBar.style.marginLeft = '0'; }
     }
     else if (line.includes('Uvicorn running')) {
-      loadingText.textContent = 'Ready';
+      loadingText.textContent = 'Ready!';
       if (progressBar) { progressBar.style.width = '100%'; }
     }
+    else if (line.includes('WARNING') || line.includes('unauthenticated')) {
+      // Skip noisy warnings from user view
+    }
+
+    // Technical log (collapsed by default)
     const p = document.createElement('p');
-    p.textContent = line.trim().substring(0, 100);
+    p.textContent = line.trim().substring(0, 120);
     loadingLog.appendChild(p);
-    while (loadingLog.children.length > 30) loadingLog.removeChild(loadingLog.firstChild);
+    while (loadingLog.children.length > 50) loadingLog.removeChild(loadingLog.firstChild);
     loadingLog.scrollTop = loadingLog.scrollHeight;
   }
 });
