@@ -1,6 +1,6 @@
 #!/bin/bash
 # Desinstalar TODO: Gemma 4 Local (app + vMLX + modelo)
-# Ejecutar: bash ~/Desarrollo/vmlx-gemma4-gqck2/uninstall.sh
+# Ejecutar: bash uninstall.sh
 
 echo "=== Desinstalacion de Gemma 4 Local ==="
 echo ""
@@ -19,7 +19,7 @@ else
 fi
 
 # 3. Borrar proyecto (guardar este script en /tmp antes de borrar)
-PROJECT_DIR="$HOME/Desarrollo/vmlx-gemma4-gqck2"
+PROJECT_DIR="$HOME/.gemma4-local"
 if [ -d "$PROJECT_DIR" ]; then
     rm -rf "$PROJECT_DIR"
     echo "[3/3] Proyecto completo borrado (~2 GB liberados)"

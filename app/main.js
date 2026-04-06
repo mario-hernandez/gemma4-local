@@ -5,7 +5,11 @@ const http = require('http');
 const fs = require('fs');
 
 const PORT = 11434;
-const PROJECT_DIR = path.join(require('os').homedir(), 'Desarrollo', 'vmlx-gemma4-gqck2');
+// In packaged app: resources are relative to the app. In dev: relative to project root.
+const IS_PACKAGED = app.isPackaged;
+const PROJECT_DIR = IS_PACKAGED
+  ? path.join(require('os').homedir(), '.gemma4-local')
+  : path.join(__dirname, '..');
 const VENV_PATH = path.join(PROJECT_DIR, '.venv', 'bin');
 const MODEL = 'mlx-community/gemma-4-e4b-it-4bit';
 

@@ -5,8 +5,8 @@
 APP="dist/mac-arm64/Gemma 4 Local.app"
 DMG="dist/Gemma 4 Local-1.0.0-arm64.dmg"
 BUNDLE_ID="com.local.gemma4"
-APPLE_ID="your-apple-id@example.com"
-TEAM_ID="2M638CZ2GL"
+APPLE_ID="${APPLE_ID:-your-apple-id@example.com}"
+TEAM_ID="${APPLE_TEAM_ID:-YOUR_TEAM_ID}"
 
 echo "=== Paso 1: Firmar la app ==="
 codesign --deep --force --options runtime \
@@ -27,7 +27,7 @@ npx electron-builder --mac --dir 2>/dev/null  # ya existe, skip si falla
 
 echo ""
 echo "=== Paso 4: Firmar DMG ==="
-codesign --force --sign "Developer ID Application: Mario Hernandez ($TEAM_ID)" "$DMG" && echo "DMG firmado"
+codesign --force --sign "Developer ID Application: $CSC_NAME ($TEAM_ID)" "$DMG" && echo "DMG firmado"
 
 echo ""
 echo "=== Paso 5: Notarizar ==="

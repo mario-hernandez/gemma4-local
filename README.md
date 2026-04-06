@@ -112,7 +112,7 @@ rm -rf "/Applications/Gemma 4 Local.app"
 rm -rf ~/.cache/huggingface/hub/models--mlx-community--gemma-4-e4b-it-4bit
 
 # Remove the project (if installed from source)
-rm -rf ~/Desarrollo/vmlx-gemma4-gqck2
+rm -rf ~/.gemma4-local
 ```
 
 Nothing else is modified. No daemons, no PATH changes, no config files.
