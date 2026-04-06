@@ -239,33 +239,29 @@ ipcMain.handle('run-setup', () => {
             return reject(new Error('pip install vmlx failed'));
           }
 
-          // Fix native libraries: strip existing signatures so macOS doesn't check Team IDs
-          sendProgress('Finalizing setup...');
-          const fixLibs = spawn('/usr/bin/find', [
-            VENV_DIR, '(', '-name', '*.so', '-o', '-name', '*.dylib', ')'
-          ], { stdio: ['ignore', 'pipe', 'pipe'] });
+          // Fix native libraries: strip signatures and ad-hoc sign so macOS allows loading
+          sendProgress('Preparing libraries for macOS...');
+          const fixScript = `
+            find "${VENV_DIR}" -name "*.so" -exec /usr/bin/codesign --remove-signature {} \\; 2>/dev/null;
+            find "${VENV_DIR}" -name "*.so" -exec /usr/bin/codesign --force --sign - {} \\; 2>/dev/null;
+            find "${VENV_DIR}" -name "*.dylib" -exec /usr/bin/codesign --remove-signature {} \\; 2>/dev/null;
+            find "${VENV_DIR}" -name "*.dylib" -exec /usr/bin/codesign --force --sign - {} \\; 2>/dev/null;
+            /usr/bin/codesign --remove-signature "${path.join(VENV_PATH, 'python3')}" 2>/dev/null;
+            /usr/bin/codesign --force --sign - "${path.join(VENV_PATH, 'python3')}" 2>/dev/null;
+            echo "SIGNING_DONE"
+          `;
+          const fixLibs = spawn('/bin/sh', ['-c', fixScript], { stdio: ['ignore', 'pipe', 'pipe'] });
 
-          let libPaths = '';
-          fixLibs.stdout.on('data', (data) => { libPaths += data.toString(); });
-
-          fixLibs.on('close', () => {
-            const libs = libPaths.split('\n').filter(l => l.trim());
-            let signed = 0;
-            for (const lib of libs) {
-              try {
-                // Remove existing signature, then ad-hoc sign
-                require('child_process').execSync(`/usr/bin/codesign --remove-signature "${lib}" 2>/dev/null`);
-                require('child_process').execSync(`/usr/bin/codesign --force --sign - "${lib}" 2>/dev/null`);
-                signed++;
-              } catch {}
+          fixLibs.stdout.on('data', (data) => {
+            if (data.toString().includes('SIGNING_DONE')) {
+              sendProgress('Setup complete! Ready to start.');
+              resolve({ success: true });
             }
-            // Also re-sign the python binary in the venv to ad-hoc
-            try {
-              const venvPython = path.join(VENV_PATH, 'python3');
-              require('child_process').execSync(`/usr/bin/codesign --remove-signature "${venvPython}" 2>/dev/null`);
-              require('child_process').execSync(`/usr/bin/codesign --force --sign - "${venvPython}" 2>/dev/null`);
-            } catch {}
-            sendProgress(`Setup complete! (${signed} libraries prepared)`);
+          });
+          fixLibs.stderr.on('data', (data) => sendProgress(data.toString()));
+          fixLibs.on('close', (code) => {
+            // Fallback resolve in case SIGNING_DONE wasn't captured
+            sendProgress('Setup complete!');
             resolve({ success: true });
           });
         });
