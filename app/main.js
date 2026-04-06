@@ -142,8 +142,10 @@ function findPython3() {
     '/Library/Frameworks/Python.framework/Versions/3.13/bin/python3',
   ];
   for (const p of candidates) {
+    console.log(`[python] checking: ${p} -> ${fs.existsSync(p) ? 'FOUND' : 'not found'}`);
     if (fs.existsSync(p)) return p;
   }
+  console.log('[python] WARNING: no python3 found anywhere!');
   return null;
 }
 
@@ -179,7 +181,10 @@ ipcMain.handle('run-setup', () => {
       return reject(new Error('python3 not found'));
     }
 
-    sendProgress(`Found Python at ${python3}. Creating virtual environment...`);
+    console.log(`[setup] Using Python: ${python3}`);
+    console.log(`[setup] VENV_DIR: ${VENV_DIR}`);
+    console.log(`[setup] FULL_PATH: ${FULL_PATH}`);
+    sendProgress(`Found Python. Creating virtual environment...`);
 
     const createVenv = spawn(python3, ['-m', 'venv', VENV_DIR], {
       env: { ...process.env, PATH: FULL_PATH },
