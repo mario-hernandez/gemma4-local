@@ -51,6 +51,15 @@
       "app/**/*",
       "node_modules/marked/**/*",
       "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "/tmp/python-embedded-build/python",
+        "to": "python",
+        "filter": [
+          "**/*"
+        ]
+      }
     ]
   },
   "devDependencies": {

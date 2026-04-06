@@ -124,9 +124,15 @@ function stopServer() {
   }
 }
 
-// Find python3 — Electron apps don't inherit user PATH
+// Find python3 — use embedded Python first, system as fallback
 function findPython3() {
+  // 1. Embedded Python (shipped with the app via extraResources)
+  const embeddedPacked = path.join(process.resourcesPath || '', 'python', 'bin', 'python3');
+  const embeddedDev = path.join(__dirname, '..', 'python-embedded', 'python', 'bin', 'python3');
+  // 2. System Python fallbacks
   const candidates = [
+    embeddedDev,
+    embeddedPacked,
     '/usr/bin/python3',
     '/usr/local/bin/python3',
     '/opt/homebrew/bin/python3',
