@@ -1,137 +1,114 @@
-# Gemma 4 Local — App de chat con IA local para Mac
+<div align="center">
 
-App de escritorio (Electron) para chatear con Google Gemma 4 corriendo 100% en tu Mac.
-Sin internet, sin suscripciones, sin que tus datos salgan de tu ordenador.
+<img src="docs/gemma-logo.svg" width="64" height="64" alt="Gemma">
 
-## Que hay instalado
+# Gemma 4 Local
 
-| Componente | Ubicacion | Tamano |
-|-----------|-----------|--------|
-| App Electron + node_modules | `~/Desarrollo/vmlx-gemma4-gqck2/` (excepto .venv) | ~500 MB |
-| Entorno virtual Python (vMLX) | `~/Desarrollo/vmlx-gemma4-gqck2/.venv/` | ~1.5 GB |
-| Modelo Gemma 4 E4B 4-bit | `~/.cache/huggingface/hub/models--mlx-community--gemma-4-e4b-it-4bit/` | ~4.9 GB |
+**Run Google's Gemma 4 AI entirely on your Mac. No internet. No subscriptions. Free forever.**
 
-**Espacio total en disco: ~6.9 GB**
+[![Download](https://img.shields.io/github/v/release/mario-hernandez/gemma4-local?label=Download&style=for-the-badge)](https://github.com/mario-hernandez/gemma4-local/releases)
+[![Landing](https://img.shields.io/badge/Website-Live-blue?style=for-the-badge)](https://mario-hernandez.github.io/gemma4-local/)
+[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 
-## Como usar
+<img src="docs/macbook-mockup.jpg" width="600" alt="Gemma 4 Local running on a MacBook Pro">
 
-### Forma rapida: App de escritorio
-
-```bash
-cd ~/Desarrollo/vmlx-gemma4-gqck2
-npm start
-```
-
-1. Se abre la app con un aviso de que el Mac puede ir lento ~10-15s
-2. Pulsas "Arrancar modelo"
-3. Esperas a que cargue (~10s)
-4. Chateas!
-
-El icono de engranaje (arriba derecha) abre el panel de ajustes donde puedes configurar:
-- Modo pensamiento (on/off/auto)
-- Temperatura, top-p, top-k
-- Tokens maximos
-- Penalizacion por repeticion
-- Instruccion de sistema personalizada
-
-### Forma alternativa: Solo servidor (sin interfaz)
-
-```bash
-cd ~/Desarrollo/vmlx-gemma4-gqck2
-./start.sh
-```
-
-El servidor arranca en `http://127.0.0.1:11434` con API compatible OpenAI.
-
-### Usar con herramientas externas
-
-vMLX es compatible con la API de OpenAI, asi que funciona con:
-- **Cursor**: Settings > Models > OpenAI API Base URL: `http://127.0.0.1:11434/v1`
-- **Continue (VS Code)**: Configurar como proveedor OpenAI-compatible
-- **Cualquier cliente OpenAI**: Apuntar base_url a `http://127.0.0.1:11434/v1`
-
-### Chatear via curl
-
-```bash
-curl http://127.0.0.1:11434/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "mlx-community/gemma-4-e4b-it-4bit",
-    "messages": [{"role": "user", "content": "Hola!"}],
-    "max_tokens": 200
-  }'
-```
-
-## Parametros del modelo
-
-| Parametro | Default | Rango | Que hace |
-|-----------|---------|-------|----------|
-| Temperatura | 1.0 | 0.0 - 2.0 | Creatividad de la respuesta. 0=rigido, 1=natural, 2=loco |
-| Top-p | 0.95 | 0.1 - 1.0 | Diversidad de palabras. 0.95 recomendado por Google |
-| Top-k | 64 | 0 - 200 | Candidatas por paso. 64 recomendado por Google |
-| Tokens max | 4096 | 256 - 32768 | Longitud maxima de respuesta |
-| Rep. penalty | 1.0 | 1.0 - 2.0 | Penaliza repeticiones. 1.0=desactivado |
-| Thinking | auto | on/off/auto | Modo "pensar antes de responder" |
-
-## Rendimiento observado
-
-- **RAM GPU usada**: 4.98 GB (de 16 GB totales)
-- **Tiempo de arranque**: ~8-15 segundos
-- **Modelo**: Gemma 4 E4B instruction-tuned, 4-bit quantization
-- **Contexto maximo practico**: ~64K tokens (con 16 GB RAM)
-
-## Notas de seguridad
-
-- El servidor escucha SOLO en localhost (127.0.0.1)
-- Las herramientas agenticas de vMLX (ejecucion de comandos) estan DESACTIVADAS
-- No se envia ninguna telemetria ni dato a ningun servidor externo
-- Auditoría completa del código fuente realizada el 2026-04-06
+</div>
 
 ---
 
-## COMO DESINSTALAR TODO
+## What is this?
 
-### Opcion 1: Script automatico (recomendado)
+A native Mac app that lets you chat with Google's Gemma 4 AI model — completely offline. Your conversations never leave your machine. No account needed, no API keys, no monthly fees.
+
+## Features
+
+- **100% offline** — works without internet, on a plane, anywhere
+- **Private** — zero telemetry, no data sent anywhere, ever
+- **Thinking mode** — toggle with Cmd+T for step-by-step reasoning
+- **Conversation history** — auto-saved, searchable across all chats
+- **Inline controls** — temperature, tokens, thinking mode right above the input
+- **Multimodal** — text, images and audio (Gemma 4 E4B)
+- **Benchmark slideshow** — see how it compares to paid models
+- **Signed & notarized** — Apple Developer ID, opens without security warnings
+
+## Requirements
+
+- Mac with Apple Silicon (M1, M2, M3, M4)
+- 16 GB RAM
+- macOS 13 Ventura or later
+- ~7 GB free disk space
+
+## Install
+
+1. [Download the DMG](https://github.com/mario-hernandez/gemma4-local/releases/latest)
+2. Open it, drag to Applications
+3. Open the app, click "Iniciar modelo"
+4. Wait ~10 seconds while the model loads into memory
+5. Chat
+
+The first launch downloads the model (~5 GB) from HuggingFace. After that, everything runs locally.
+
+## Benchmarks
+
+Gemma 4 E4B (free, local) vs paid API models:
+
+| Benchmark | Gemma 4 E4B | GPT-4o mini | Claude 3.5 Haiku |
+|-----------|------------|-------------|-----------------|
+| MMLU Pro | **69.4** | 63.1 | 65.0 |
+| LiveCodeBench | **52.0** | 23.4 | 31.4 |
+| GPQA Diamond | **58.6** | 44.2 | 41.6 |
+
+It beats every paid lightweight model. [See the full comparison →](https://mario-hernandez.github.io/gemma4-local/)
+
+## How it works
+
+The app bundles a Python virtual environment with [vMLX](https://github.com/jjang-ai/vmlx) (an MLX-based inference engine optimized for Apple Silicon). When you click "Iniciar modelo", it starts a local server and loads the Gemma 4 E4B model into GPU memory. The Electron frontend communicates with it via a local API. Nothing touches the network.
+
+## Keyboard shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| `Cmd+T` | Toggle thinking mode |
+| `Cmd+N` | New conversation |
+| `Enter` | Send message |
+| `Shift+Enter` | New line |
+| `Cmd+Q` | Quit (stops model, frees RAM) |
+
+## Security audit
+
+The vMLX engine was [fully audited](https://github.com/jjang-ai/vmlx) before integration:
+
+- **No telemetry** — zero outbound connections
+- **No eval/exec** — only `mx.eval()` (MLX GPU sync)
+- **No pickle** — all weights loaded via safetensors
+- **API key auth** — optional, for network exposure
+- **Agentic tools disabled** — shell execution features are off by default
+
+## Uninstall
 
 ```bash
-bash ~/Desarrollo/vmlx-gemma4-gqck2/uninstall.sh
-```
+# Remove the app
+rm -rf "/Applications/Gemma 4 Local.app"
 
-### Opcion 2: Manual paso a paso
-
-```bash
-# 1. Parar procesos
-pkill -f "vmlx serve"; pkill -f "Electron"
-
-# 2. Borrar el proyecto completo (app + venv + node_modules)
-rm -rf ~/Desarrollo/vmlx-gemma4-gqck2
-
-# 3. Borrar el modelo descargado
+# Remove the model (~5 GB)
 rm -rf ~/.cache/huggingface/hub/models--mlx-community--gemma-4-e4b-it-4bit
 
-# 4. (Opcional) Si no usas HuggingFace para nada mas
-rm -rf ~/.cache/huggingface
+# Remove the project (if installed from source)
+rm -rf ~/Desarrollo/vmlx-gemma4-gqck2
 ```
 
-**Espacio recuperado: ~6.9 GB**
+Nothing else is modified. No daemons, no PATH changes, no config files.
 
-### Verificar que no queda nada
+## Legal
 
-```bash
-ps aux | grep -E "vmlx|Electron" | grep -v grep
-ls ~/Desarrollo/vmlx-gemma4-gqck2 2>/dev/null && echo "AUN EXISTE" || echo "BORRADO OK"
-ls ~/.cache/huggingface/hub/models--mlx-community--gemma-4-e4b-it-4bit 2>/dev/null && echo "AUN EXISTE" || echo "BORRADO OK"
-```
+This is an independent project. Not affiliated with Google, Alphabet, or DeepMind. "Gemma" is a trademark of Google LLC. Model weights are licensed under [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0) by Google. See [NOTICE](NOTICE) for full trademark attributions.
 
-### Que NO se modifico (no hay nada que revertir)
+## License
 
-- No se instalo nada globalmente (todo en venv + node_modules locales)
-- No se modifico ningun archivo del sistema
-- No se creo ningun servicio, daemon ni LaunchAgent
-- No se modifico el PATH, .zshrc, ni ningún archivo de configuracion
-- No se creo ningun archivo fuera de `~/Desarrollo/vmlx-gemma4-gqck2/` y `~/.cache/huggingface/`
+[MIT](LICENSE) — the app code is yours to use, modify, and distribute.
 
 ---
 
-Fecha de instalacion: 2026-04-06
-Repositorio auditado: https://github.com/jjang-ai/vmlx (v1.3.28)
+<div align="center">
+  <sub>Built by <a href="https://github.com/mario-hernandez">Mario Hernandez</a> · <a href="https://x.com/mariohernandez">@mariohernandez</a></sub>
+</div>
