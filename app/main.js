@@ -36,12 +36,12 @@ function createWindow() {
 }
 
 function startServer() {
-  const vmlxBin = path.join(VENV_PATH, 'vmlx');
+  const pythonBin = path.join(VENV_PATH, 'python3');
 
-  // nice -n 10: baja la prioridad de CPU para no congelar el Mac al cargar el modelo
+  // Use python3 -m to run vmlx (avoids signature inheritance issues)
   serverProcess = spawn('nice', [
     '-n', '10',
-    vmlxBin,
+    pythonBin, '-m', 'vmlx_engine.cli',
     'serve', MODEL,
     '--port', String(PORT),
     '--host', '127.0.0.1',
@@ -238,10 +238,10 @@ ipcMain.handle('run-setup', () => {
             return reject(new Error('pip install vmlx failed'));
           }
 
-          // Fix native libraries: ad-hoc sign all .so and .dylib so macOS allows loading them
+          // Fix native libraries: strip existing signatures so macOS doesn't check Team IDs
           sendProgress('Finalizing setup...');
           const fixLibs = spawn('/usr/bin/find', [
-            VENV_DIR, '-name', '*.so', '-o', '-name', '*.dylib'
+            VENV_DIR, '(', '-name', '*.so', '-o', '-name', '*.dylib', ')'
           ], { stdio: ['ignore', 'pipe', 'pipe'] });
 
           let libPaths = '';
@@ -252,10 +252,18 @@ ipcMain.handle('run-setup', () => {
             let signed = 0;
             for (const lib of libs) {
               try {
+                // Remove existing signature, then ad-hoc sign
+                require('child_process').execSync(`/usr/bin/codesign --remove-signature "${lib}" 2>/dev/null`);
                 require('child_process').execSync(`/usr/bin/codesign --force --sign - "${lib}" 2>/dev/null`);
                 signed++;
               } catch {}
             }
+            // Also re-sign the python binary in the venv to ad-hoc
+            try {
+              const venvPython = path.join(VENV_PATH, 'python3');
+              require('child_process').execSync(`/usr/bin/codesign --remove-signature "${venvPython}" 2>/dev/null`);
+              require('child_process').execSync(`/usr/bin/codesign --force --sign - "${venvPython}" 2>/dev/null`);
+            } catch {}
             sendProgress(`Setup complete! (${signed} libraries prepared)`);
             resolve({ success: true });
           });
