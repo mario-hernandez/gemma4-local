@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,7 +23,7 @@
         </div>
         <div class="startup-brand">
           <h1 class="startup-title">Gemma 4</h1>
-          <p class="startup-sub">Inteligencia local en tu Mac</p>
+          <p class="startup-sub">Local AI on your Mac</p>
         </div>
       </div>
 
@@ -31,14 +31,14 @@
       <div class="startup-chips">
         <span class="chip">E4B</span>
         <span class="chip">4-bit</span>
-        <span class="chip">128K contexto</span>
-        <span class="chip">Texto + Imagen + Audio</span>
+        <span class="chip">128K context</span>
+        <span class="chip">Text + Image + Audio</span>
         <span class="chip">Apache 2.0</span>
       </div>
 
       <!-- Action -->
       <div id="startup-idle" class="startup-section">
-        <button id="start-btn" class="start-btn">Iniciar modelo</button>
+        <button id="start-btn" class="start-btn">Start model</button>
       </div>
 
       <!-- Loading (reemplaza al botón) -->
@@ -46,12 +46,12 @@
         <div class="startup-progress">
           <div class="startup-progress-bar" id="progress-bar"></div>
         </div>
-        <p id="loading-text" class="startup-loading-text">Cargando 5 GB en memoria...</p>
+        <p id="loading-text" class="startup-loading-text">Loading 5 GB into memory...</p>
         <div class="loading-log" id="loading-log"></div>
       </div>
 
       <!-- Benchmarks link -->
-      <button id="bench-toggle" class="bench-toggle">Ver rendimiento comparado</button>
+      <button id="bench-toggle" class="bench-toggle">View benchmarks</button>
 
       <!-- Google -->
       <div class="startup-google">
@@ -63,7 +63,7 @@
           <path d="M262.02 54.48l7.56 5.04c-2.44 3.61-8.32 9.83-18.48 9.83-12.6 0-22.01-9.74-22.01-22.18 0-13.19 9.49-22.18 20.92-22.18 11.51 0 17.14 9.16 18.98 14.11l1.01 2.52-29.65 12.28c2.27 4.45 5.8 6.72 10.75 6.72 4.96 0 8.4-2.44 10.92-6.14zm-23.27-7.98l19.82-8.23c-1.09-2.77-4.37-4.7-8.23-4.7-4.95 0-11.84 4.37-11.59 12.93z" fill="#444"/>
           <path d="M35.29 41.19V32H68c.31 1.64.47 3.58.47 5.68 0 7.06-1.93 15.79-8.15 22.01-6.05 6.3-13.78 9.66-24.02 9.66C17.57 69.36 2 54.21 2 35.68S17.57 2 36.3 2c10.41 0 17.81 4.08 23.36 9.37l-6.57 6.57c-3.95-3.7-9.32-6.59-16.79-6.59-13.7 0-24.41 11.05-24.41 24.7s10.72 24.7 24.41 24.7c8.91 0 13.95-3.58 17.21-6.84 2.64-2.64 4.37-6.42 5.06-11.58l-22.28-.04z" fill="#444"/>
         </svg>
-        <p style="font-size:9px;color:#333;margin-top:6px">Proyecto independiente. No afiliado con Google.</p>
+        <p style="font-size:9px;color:#333;margin-top:6px">Independent project. Not affiliated with Google.</p>
       </div>
     </div>
 
@@ -75,26 +75,26 @@
         <div class="bench-slide active" data-slide="0">
           <div class="slide-header">
             <span class="slide-counter">1 / 4</span>
-            <h2>vs Los mejores del mundo</h2>
-            <p>Abril 2026 &middot; Modelos frontier que cuestan $1-25 por millon de tokens</p>
+            <h2>vs The best in the world</h2>
+            <p>April 2026 &middot; Frontier models costing $1-25 per million tokens</p>
           </div>
           <div class="bench-frontier-grid">
-            <div class="frontier-col"><div class="frontier-header">Conocimiento</div><div class="frontier-item"><span class="frontier-name">Gemini 2.5 Pro</span><span class="frontier-score">86.2</span></div><div class="frontier-item"><span class="frontier-name">DeepSeek R1</span><span class="frontier-score">85.0</span></div><div class="frontier-item"><span class="frontier-name">Opus 4.6</span><span class="frontier-score">81.2</span></div><div class="frontier-item"><span class="frontier-name">Llama 4 Maverick</span><span class="frontier-score">80.5</span></div><div class="frontier-item"><span class="frontier-name">Grok 3</span><span class="frontier-score">79.9</span></div><div class="frontier-item"><span class="frontier-name">Sonnet 4.6</span><span class="frontier-score">79.1</span></div><div class="frontier-item frontier-highlight"><span class="frontier-name">Gemma 4 E4B</span><span class="frontier-score">69.4</span></div></div>
-            <div class="frontier-col"><div class="frontier-header">Codigo</div><div class="frontier-item"><span class="frontier-name">Sonnet 4.6</span><span class="frontier-score">~80</span></div><div class="frontier-item"><span class="frontier-name">Grok 3</span><span class="frontier-score">79.4</span></div><div class="frontier-item"><span class="frontier-name">DeepSeek R1</span><span class="frontier-score">73.3</span></div><div class="frontier-item"><span class="frontier-name">Gemini 2.5 Pro</span><span class="frontier-score">69.0</span></div><div class="frontier-item frontier-highlight"><span class="frontier-name">Gemma 4 E4B</span><span class="frontier-score">52.0</span></div><div class="frontier-item"><span class="frontier-name">Llama 4 Maverick</span><span class="frontier-score">43.4</span></div></div>
-            <div class="frontier-col"><div class="frontier-header">Razonamiento</div><div class="frontier-item"><span class="frontier-name">Opus 4.6</span><span class="frontier-score">91.3</span></div><div class="frontier-item"><span class="frontier-name">Grok 3</span><span class="frontier-score">84.6</span></div><div class="frontier-item"><span class="frontier-name">Gemini 2.5 Pro</span><span class="frontier-score">84.0</span></div><div class="frontier-item"><span class="frontier-name">DeepSeek R1</span><span class="frontier-score">81.0</span></div><div class="frontier-item"><span class="frontier-name">Sonnet 4.6</span><span class="frontier-score">74.1</span></div><div class="frontier-item"><span class="frontier-name">Llama 4 Maverick</span><span class="frontier-score">69.8</span></div><div class="frontier-item frontier-highlight"><span class="frontier-name">Gemma 4 E4B</span><span class="frontier-score">58.6</span></div></div>
+            <div class="frontier-col"><div class="frontier-header">Knowledge</div><div class="frontier-item"><span class="frontier-name">Gemini 2.5 Pro</span><span class="frontier-score">86.2</span></div><div class="frontier-item"><span class="frontier-name">DeepSeek R1</span><span class="frontier-score">85.0</span></div><div class="frontier-item"><span class="frontier-name">Opus 4.6</span><span class="frontier-score">81.2</span></div><div class="frontier-item"><span class="frontier-name">Llama 4 Maverick</span><span class="frontier-score">80.5</span></div><div class="frontier-item"><span class="frontier-name">Grok 3</span><span class="frontier-score">79.9</span></div><div class="frontier-item"><span class="frontier-name">Sonnet 4.6</span><span class="frontier-score">79.1</span></div><div class="frontier-item frontier-highlight"><span class="frontier-name">Gemma 4 E4B</span><span class="frontier-score">69.4</span></div></div>
+            <div class="frontier-col"><div class="frontier-header">Code</div><div class="frontier-item"><span class="frontier-name">Sonnet 4.6</span><span class="frontier-score">~80</span></div><div class="frontier-item"><span class="frontier-name">Grok 3</span><span class="frontier-score">79.4</span></div><div class="frontier-item"><span class="frontier-name">DeepSeek R1</span><span class="frontier-score">73.3</span></div><div class="frontier-item"><span class="frontier-name">Gemini 2.5 Pro</span><span class="frontier-score">69.0</span></div><div class="frontier-item frontier-highlight"><span class="frontier-name">Gemma 4 E4B</span><span class="frontier-score">52.0</span></div><div class="frontier-item"><span class="frontier-name">Llama 4 Maverick</span><span class="frontier-score">43.4</span></div></div>
+            <div class="frontier-col"><div class="frontier-header">Reasoning</div><div class="frontier-item"><span class="frontier-name">Opus 4.6</span><span class="frontier-score">91.3</span></div><div class="frontier-item"><span class="frontier-name">Grok 3</span><span class="frontier-score">84.6</span></div><div class="frontier-item"><span class="frontier-name">Gemini 2.5 Pro</span><span class="frontier-score">84.0</span></div><div class="frontier-item"><span class="frontier-name">DeepSeek R1</span><span class="frontier-score">81.0</span></div><div class="frontier-item"><span class="frontier-name">Sonnet 4.6</span><span class="frontier-score">74.1</span></div><div class="frontier-item"><span class="frontier-name">Llama 4 Maverick</span><span class="frontier-score">69.8</span></div><div class="frontier-item frontier-highlight"><span class="frontier-name">Gemma 4 E4B</span><span class="frontier-score">58.6</span></div></div>
           </div>
           <div class="frontier-prices"><span>Opus 4.6 <em>$5/$25</em></span><span>Sonnet 4.6 <em>$3/$15</em></span><span>Gemini 2.5 <em>$1.25/$10</em></span><span>DeepSeek <em>$0.55/$2</em></span><span>Gemma 4 <em>$0</em></span></div>
         </div>
 
-        <!-- Slide 2: Conocimiento vs paid -->
+        <!-- Slide 2: Knowledge vs paid -->
         <div class="bench-slide" data-slide="1">
           <div class="slide-header">
             <span class="slide-counter">2 / 4</span>
-            <h2>Conocimiento general</h2>
-            <p>MMLU Pro &middot; Supera a todos los modelos ligeros de pago</p>
+            <h2>General knowledge</h2>
+            <p>MMLU Pro &middot; Outperforms all lightweight paid models</p>
           </div>
           <div class="slide-bars">
-            <div class="bench-bar-row"><span class="bench-label"><b>Gemma 4 E4B</b> <em>gratis</em></span><div class="bench-track"><div class="bench-fill bench-accent" style="width:92%"></div><span class="bench-val">69.4</span></div></div>
+            <div class="bench-bar-row"><span class="bench-label"><b>Gemma 4 E4B</b> <em>free</em></span><div class="bench-track"><div class="bench-fill bench-accent" style="width:92%"></div><span class="bench-val">69.4</span></div></div>
             <div class="bench-bar-row"><span class="bench-label">Claude 3.5 Haiku <em>$0.80/M</em></span><div class="bench-track"><div class="bench-fill bench-paid" style="width:86%"></div><span class="bench-val">65.0</span></div></div>
             <div class="bench-bar-row"><span class="bench-label">GPT-4o mini <em>$0.15/M</em></span><div class="bench-track"><div class="bench-fill bench-paid" style="width:84%"></div><span class="bench-val">63.1</span></div></div>
             <div class="bench-bar-row"><span class="bench-label">Mistral Small <em>$0.20/M</em></span><div class="bench-track"><div class="bench-fill bench-paid" style="width:70%"></div><span class="bench-val">52.9</span></div></div>
@@ -102,30 +102,30 @@
           </div>
         </div>
 
-        <!-- Slide 3: Codigo vs paid -->
+        <!-- Slide 3: Code vs paid -->
         <div class="bench-slide" data-slide="2">
           <div class="slide-header">
             <span class="slide-counter">3 / 4</span>
-            <h2>Generacion de codigo</h2>
-            <p>LiveCodeBench v6 &middot; Casi el doble que Claude 3.5 Haiku</p>
+            <h2>Code generation</h2>
+            <p>LiveCodeBench v6 &middot; Nearly double Claude 3.5 Haiku</p>
           </div>
           <div class="slide-bars">
-            <div class="bench-bar-row"><span class="bench-label"><b>Gemma 4 E4B</b> <em>gratis</em></span><div class="bench-track"><div class="bench-fill bench-accent" style="width:92%"></div><span class="bench-val">52.0</span></div></div>
+            <div class="bench-bar-row"><span class="bench-label"><b>Gemma 4 E4B</b> <em>free</em></span><div class="bench-track"><div class="bench-fill bench-accent" style="width:92%"></div><span class="bench-val">52.0</span></div></div>
             <div class="bench-bar-row"><span class="bench-label">Claude 3.5 Haiku <em>$0.80/M</em></span><div class="bench-track"><div class="bench-fill bench-paid" style="width:56%"></div><span class="bench-val">31.4</span></div></div>
             <div class="bench-bar-row"><span class="bench-label">GPT-4o mini <em>$0.15/M</em></span><div class="bench-track"><div class="bench-fill bench-paid" style="width:41%"></div><span class="bench-val">23.4</span></div></div>
             <div class="bench-bar-row"><span class="bench-label">Mistral Small <em>$0.20/M</em></span><div class="bench-track"><div class="bench-fill bench-paid" style="width:25%"></div><span class="bench-val">14.1</span></div></div>
           </div>
         </div>
 
-        <!-- Slide 4: Razonamiento vs paid -->
+        <!-- Slide 4: Reasoning vs paid -->
         <div class="bench-slide" data-slide="3">
           <div class="slide-header">
             <span class="slide-counter">4 / 4</span>
-            <h2>Razonamiento avanzado</h2>
-            <p>GPQA Diamond &middot; +33% sobre GPT-4o mini en preguntas PhD</p>
+            <h2>Advanced reasoning</h2>
+            <p>GPQA Diamond &middot; +33% over GPT-4o mini on PhD-level questions</p>
           </div>
           <div class="slide-bars">
-            <div class="bench-bar-row"><span class="bench-label"><b>Gemma 4 E4B</b> <em>gratis</em></span><div class="bench-track"><div class="bench-fill bench-accent" style="width:92%"></div><span class="bench-val">58.6</span></div></div>
+            <div class="bench-bar-row"><span class="bench-label"><b>Gemma 4 E4B</b> <em>free</em></span><div class="bench-track"><div class="bench-fill bench-accent" style="width:92%"></div><span class="bench-val">58.6</span></div></div>
             <div class="bench-bar-row"><span class="bench-label">GPT-4o mini <em>$0.15/M</em></span><div class="bench-track"><div class="bench-fill bench-paid" style="width:69%"></div><span class="bench-val">44.2</span></div></div>
             <div class="bench-bar-row"><span class="bench-label">Claude 3.5 Haiku <em>$0.80/M</em></span><div class="bench-track"><div class="bench-fill bench-paid" style="width:65%"></div><span class="bench-val">41.6</span></div></div>
             <div class="bench-bar-row"><span class="bench-label">Mistral Small <em>$0.20/M</em></span><div class="bench-track"><div class="bench-fill bench-paid" style="width:60%"></div><span class="bench-val">38.1</span></div></div>
@@ -142,7 +142,7 @@
             <span class="slide-dot"></span>
           </div>
         </div>
-        <p class="slide-footer">Gratis, offline, 4.5B parametros. En tu Mac ahora mismo.</p>
+        <p class="slide-footer">Free, offline, 4.5B parameters. On your Mac right now.</p>
       </div>
     </div>
   </div>
@@ -151,7 +151,7 @@
   <div id="chat-app" class="chat-app hidden">
     <header class="titlebar" style="-webkit-app-region: drag;">
       <div class="titlebar-left" style="-webkit-app-region: no-drag;">
-        <button id="history-toggle" class="icon-btn" title="Historico">
+        <button id="history-toggle" class="icon-btn" title="History">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
           </svg>
@@ -163,17 +163,17 @@
         <span id="memory-info" class="memory-info"></span>
       </div>
       <div class="titlebar-right" style="-webkit-app-region: no-drag;">
-        <button id="new-chat-btn" class="icon-btn" title="Nueva conversacion">
+        <button id="new-chat-btn" class="icon-btn" title="New conversation">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
           </svg>
         </button>
-        <button id="quit-btn" class="icon-btn quit-icon" title="Apagar modelo y cerrar (Cmd+Q)">
+        <button id="quit-btn" class="icon-btn quit-icon" title="Shut down model and quit (Cmd+Q)">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path><line x1="12" y1="2" x2="12" y2="12"></line>
           </svg>
         </button>
-        <button id="settings-toggle" class="icon-btn" title="Ajustes">
+        <button id="settings-toggle" class="icon-btn" title="Settings">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="3"></circle>
             <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
@@ -187,11 +187,11 @@
       <aside id="history-panel" class="history-panel hidden">
         <div class="history-inner">
           <div class="history-header">
-            <h3>Conversaciones</h3>
-            <input type="text" id="history-search" class="history-search" placeholder="Buscar...">
+            <h3>Conversations</h3>
+            <input type="text" id="history-search" class="history-search" placeholder="Search...">
           </div>
           <div id="history-list" class="history-list">
-            <p class="history-empty">Sin conversaciones guardadas</p>
+            <p class="history-empty">No saved conversations</p>
           </div>
         </div>
       </aside>
@@ -199,60 +199,60 @@
       <!-- Panel de ajustes -->
       <aside id="settings-panel" class="settings-panel hidden">
         <div class="settings-inner">
-          <h3>Ajustes del modelo</h3>
+          <h3>Model settings</h3>
 
           <!-- Thinking -->
           <div class="setting-group">
             <div class="setting-header">
-              <label for="s-thinking">Modo pensamiento</label>
+              <label for="s-thinking">Thinking mode</label>
               <select id="s-thinking">
                 <option value="auto">Auto</option>
-                <option value="on">Activado</option>
-                <option value="off">Desactivado</option>
+                <option value="on">On</option>
+                <option value="off">Off</option>
               </select>
             </div>
             <p class="setting-help">
-              Cuando esta activado, Gemma "piensa en voz alta" antes de responder.
-              Razona paso a paso internamente y luego da una respuesta mas elaborada.
-              Util para problemas de logica, matematicas o codigo.
-              Desactivalo si solo quieres respuestas rapidas y directas.
+              When enabled, Gemma "thinks out loud" before answering.
+              It reasons step by step internally and then provides a more thorough response.
+              Useful for logic, math, or coding problems.
+              Disable it if you just want quick, direct answers.
             </p>
           </div>
 
           <!-- Temperature -->
           <div class="setting-group">
             <div class="setting-header">
-              <label for="s-temperature">Temperatura</label>
+              <label for="s-temperature">Temperature</label>
               <div class="setting-value">
                 <input type="range" id="s-temperature" min="0" max="2" step="0.05" value="1.0">
                 <span id="s-temperature-val">1.0</span>
               </div>
             </div>
             <p class="setting-help">
-              Controla lo "creativa" o "aleatoria" que es la respuesta.
-              <strong>0.0</strong> = siempre la misma respuesta, muy predecible.
-              <strong>0.3-0.5</strong> = ideal para codigo y datos exactos.
-              <strong>0.7-1.0</strong> = conversacion natural (recomendado por Google: 1.0).
-              <strong>1.5-2.0</strong> = muy creativo, pero puede desvariar.
+              Controls how "creative" or "random" the response is.
+              <strong>0.0</strong> = always the same response, very predictable.
+              <strong>0.3-0.5</strong> = ideal for code and exact data.
+              <strong>0.7-1.0</strong> = natural conversation (recommended by Google: 1.0).
+              <strong>1.5-2.0</strong> = very creative, but may go off track.
             </p>
           </div>
 
           <!-- Max tokens -->
           <div class="setting-group">
             <div class="setting-header">
-              <label for="s-max-tokens">Tokens maximos</label>
+              <label for="s-max-tokens">Max tokens</label>
               <div class="setting-value">
                 <input type="range" id="s-max-tokens" min="256" max="8192" step="256" value="4096">
                 <span id="s-max-tokens-val">4096</span>
               </div>
             </div>
             <p class="setting-help">
-              Limite de longitud de la respuesta. Un token son unas 3/4 partes de una palabra.
-              <strong>256</strong> = respuestas muy cortas (~190 palabras).
-              <strong>2048</strong> = respuestas normales (~1500 palabras).
-              <strong>4096</strong> = respuestas largas (recomendado).
-              <strong>8192</strong> = maximo practico con 16 GB de RAM.
-              Mas tokens = mas tiempo y mas memoria.
+              Response length limit. One token is roughly 3/4 of a word.
+              <strong>256</strong> = very short responses (~190 words).
+              <strong>2048</strong> = normal responses (~1500 words).
+              <strong>4096</strong> = long responses (recommended).
+              <strong>8192</strong> = practical maximum with 16 GB of RAM.
+              More tokens = more time and more memory.
             </p>
           </div>
 
@@ -266,11 +266,11 @@
               </div>
             </div>
             <p class="setting-help">
-              Limita las palabras que el modelo considera al generar.
-              Con <strong>0.95</strong> (recomendado por Google), el modelo elige entre las palabras
-              que suman el 95% de probabilidad, descartando las mas raras.
-              Bajarlo a <strong>0.5-0.7</strong> hace respuestas mas conservadoras.
-              Subirlo a <strong>1.0</strong> permite cualquier palabra (mas variedad).
+              Limits which words the model considers when generating.
+              With <strong>0.95</strong> (recommended by Google), the model chooses among words
+              that sum up to 95% probability, discarding the rarest ones.
+              Lowering to <strong>0.5-0.7</strong> makes responses more conservative.
+              Raising to <strong>1.0</strong> allows any word (more variety).
             </p>
           </div>
 
@@ -283,50 +283,50 @@
               </div>
             </div>
             <p class="setting-help">
-              Numero maximo de palabras candidatas en cada paso de generacion.
-              <strong>64</strong> = recomendado por Google. El modelo elige entre las 64 palabras mas probables.
-              <strong>1</strong> = siempre elige la mas probable (muy rigido).
-              <strong>0</strong> = sin limite (se combina con top-p para filtrar).
-              Util para controlar la variedad junto con temperatura.
+              Maximum number of candidate words at each generation step.
+              <strong>64</strong> = recommended by Google. The model chooses among the 64 most probable words.
+              <strong>1</strong> = always picks the most probable (very rigid).
+              <strong>0</strong> = no limit (combined with top-p for filtering).
+              Useful for controlling variety alongside temperature.
             </p>
           </div>
 
           <!-- Repetition penalty -->
           <div class="setting-group">
             <div class="setting-header">
-              <label for="s-rep-penalty">Penalizacion por repeticion</label>
+              <label for="s-rep-penalty">Repetition penalty</label>
               <div class="setting-value">
                 <input type="range" id="s-rep-penalty" min="1.0" max="2.0" step="0.05" value="1.0">
                 <span id="s-rep-penalty-val">1.0</span>
               </div>
             </div>
             <p class="setting-help">
-              Penaliza al modelo por repetir las mismas palabras o frases.
-              <strong>1.0</strong> = sin penalizacion (recomendado por defecto).
-              <strong>1.1-1.2</strong> = reduce repeticiones suavemente.
-              <strong>1.5+</strong> = evita repeticiones agresivamente, pero puede romper la coherencia.
-              Solo subelo si ves que el modelo se repite mucho.
+              Penalizes the model for repeating the same words or phrases.
+              <strong>1.0</strong> = no penalty (recommended by default).
+              <strong>1.1-1.2</strong> = gently reduces repetitions.
+              <strong>1.5+</strong> = aggressively avoids repetitions, but may break coherence.
+              Only increase if you notice the model repeating itself a lot.
             </p>
           </div>
 
           <!-- System prompt -->
           <div class="setting-group">
             <div class="setting-header">
-              <label for="s-system">Instruccion de sistema</label>
+              <label for="s-system">System prompt</label>
             </div>
             <textarea id="s-system" class="system-input" rows="3"
-              placeholder="Ej: Eres un asistente experto en programacion. Responde siempre en espanol."></textarea>
+              placeholder="E.g.: You are an expert programming assistant. Always respond in English."></textarea>
             <p class="setting-help">
-              Instrucciones generales que el modelo sigue en toda la conversacion.
-              Aqui defines su "personalidad", idioma, formato de respuestas, etc.
-              Se envia como primer mensaje invisible antes de cada pregunta tuya.
-              Dejalo vacio para usar el comportamiento por defecto del modelo.
+              General instructions the model follows throughout the conversation.
+              Here you define its "personality", language, response format, etc.
+              It is sent as an invisible first message before each of your questions.
+              Leave empty to use the model's default behavior.
             </p>
           </div>
 
           <!-- Reset -->
           <div class="setting-group">
-            <button id="reset-settings" class="reset-btn">Restaurar valores recomendados</button>
+            <button id="reset-settings" class="reset-btn">Reset to recommended values</button>
           </div>
         </div>
       </aside>
@@ -335,7 +335,7 @@
       <main class="messages" id="messages">
         <div class="welcome">
           <h2>Gemma 4 Local</h2>
-          <p>Modelo corriendo 100% en tu Mac. Nada sale de aqui.</p>
+          <p>Model running 100% on your Mac. Nothing leaves this machine.</p>
         </div>
       </main>
     </div>
@@ -345,21 +345,21 @@
       <div id="stop-row" class="stop-row hidden">
         <button id="stop-btn" class="stop-btn">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
-          Parar
+          Stop
         </button>
       </div>
       <!-- Quick controls toolbar -->
       <div class="quick-bar">
-        <button id="q-thinking" class="q-pill q-thinking" title="Modo pensamiento (Cmd+T)">
+        <button id="q-thinking" class="q-pill q-thinking" title="Thinking mode (Cmd+T)">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>
           </svg>
           <span id="q-thinking-label">Think: auto</span>
         </button>
-        <button id="q-temp" class="q-pill" title="Temperatura">
+        <button id="q-temp" class="q-pill" title="Temperature">
           <span id="q-temp-label">Temp 1.0</span>
         </button>
-        <button id="q-tokens" class="q-pill" title="Tokens maximos">
+        <button id="q-tokens" class="q-pill" title="Max tokens">
           <span id="q-tokens-label">4k tokens</span>
         </button>
       </div>
@@ -367,11 +367,11 @@
       <div class="input-wrapper">
         <textarea
           id="input"
-          placeholder="Escribe un mensaje..."
+          placeholder="Type a message..."
           rows="1"
           autofocus
         ></textarea>
-        <button id="send-btn" class="send-btn" title="Enviar (Enter)">
+        <button id="send-btn" class="send-btn" title="Send (Enter)">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="12" y1="19" x2="12" y2="5"></line>
             <polyline points="5 12 12 5 19 12"></polyline>
@@ -379,7 +379,7 @@
         </button>
       </div>
       <div class="input-footer">
-        <span>Gemma 4 E4B 4-bit &middot; Local &middot; Shift+Enter para nueva linea</span>
+        <span>Gemma 4 E4B 4-bit &middot; Local &middot; Shift+Enter for new line</span>
       </div>
     </footer>
   </div>

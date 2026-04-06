@@ -65,12 +65,48 @@ const resetBtn = $('#reset-settings');
 
 // =================== STARTUP ===================
 
-startBtn.addEventListener('click', () => {
-  startBtn.disabled = true;
-  startupIdle.classList.add('hidden');
-  startupLoading.classList.remove('hidden');
-  window.api.startServer();
-});
+// Check if vMLX is installed on launch
+(async () => {
+  const { installed } = await window.api.checkSetup();
+  if (!installed) {
+    // Show setup UI
+    startBtn.textContent = 'Install & Start';
+    startBtn.addEventListener('click', async () => {
+      startBtn.disabled = true;
+      startupIdle.classList.add('hidden');
+      startupLoading.classList.remove('hidden');
+      loadingText.textContent = 'Setting up (first time only)...';
+      try {
+        await window.api.runSetup();
+        loadingText.textContent = 'Setup complete. Starting model...';
+        window.api.startServer();
+      } catch (err) {
+        loadingText.textContent = 'Setup failed. Please check you have Python 3 installed.';
+      }
+    });
+
+    window.api.onSetupProgress((msg) => {
+      const lines = msg.split('\n').filter(l => l.trim());
+      for (const line of lines) {
+        if (line.includes('Installing')) loadingText.textContent = 'Installing vMLX engine...';
+        else if (line.includes('Successfully installed')) loadingText.textContent = 'Installation complete!';
+        const p = document.createElement('p');
+        p.textContent = line.trim().substring(0, 100);
+        loadingLog.appendChild(p);
+        while (loadingLog.children.length > 30) loadingLog.removeChild(loadingLog.firstChild);
+        loadingLog.scrollTop = loadingLog.scrollHeight;
+      }
+    });
+  } else {
+    // Already installed — normal flow
+    startBtn.addEventListener('click', () => {
+      startBtn.disabled = true;
+      startupIdle.classList.add('hidden');
+      startupLoading.classList.remove('hidden');
+      window.api.startServer();
+    });
+  }
+})();
 
 window.api.onServerStatus((data) => {
   if (data.status === 'ready') {
@@ -86,7 +122,7 @@ window.api.onServerStatus((data) => {
   } else if (data.status === 'error') {
     loadingText.textContent = `Error: ${data.message}`;
   } else if (data.status === 'stopped') {
-    loadingText.textContent = 'Servidor detenido';
+    loadingText.textContent = 'Server stopped';
   }
 });
 
@@ -96,15 +132,15 @@ window.api.onServerLog((msg) => {
   const lines = msg.split('\n').filter(l => l.trim());
   for (const line of lines) {
     if (line.includes('Loading model')) {
-      loadingText.textContent = 'Cargando modelo en GPU...';
+      loadingText.textContent = 'Loading model into GPU...';
       if (progressBar) progressBar.style.animation = 'progressSlide 1.5s ease-in-out infinite';
     }
     else if (line.includes('MLLM loaded')) {
-      loadingText.textContent = 'Modelo cargado, iniciando servidor...';
+      loadingText.textContent = 'Model loaded, starting server...';
       if (progressBar) { progressBar.style.animation = 'none'; progressBar.style.width = '80%'; progressBar.style.marginLeft = '0'; }
     }
     else if (line.includes('Uvicorn running')) {
-      loadingText.textContent = 'Listo';
+      loadingText.textContent = 'Ready';
       if (progressBar) { progressBar.style.width = '100%'; }
     }
     const p = document.createElement('p');
@@ -125,7 +161,7 @@ function generateId() {
 
 function generateTitle(msgs) {
   const firstUser = msgs.find(m => m.role === 'user');
-  if (!firstUser) return 'Nueva conversacion';
+  if (!firstUser) return 'New conversation';
   let title = firstUser.content.replace(/\n/g, ' ').trim();
   return title.length > 60 ? title.substring(0, 57) + '...' : title;
 }
@@ -136,11 +172,11 @@ function formatDate(dateStr) {
   const diff = now - d;
   const days = Math.floor(diff / 86400000);
 
-  if (days === 0) return 'Hoy';
-  if (days === 1) return 'Ayer';
-  if (days < 7) return `Hace ${days} dias`;
-  if (days < 30) return `Hace ${Math.floor(days / 7)} semanas`;
-  return d.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+  if (days === 0) return 'Today';
+  if (days === 1) return 'Yesterday';
+  if (days < 7) return `${days} days ago`;
+  if (days < 30) return `${Math.floor(days / 7)} weeks ago`;
+  return d.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
 }
 
 async function saveCurrentConversation() {
@@ -209,7 +245,7 @@ function renderHistoryList(filter = '') {
     : conversationList;
 
   if (filtered.length === 0) {
-    historyList.innerHTML = '<p class="history-empty">Sin conversaciones guardadas</p>';
+    historyList.innerHTML = '<p class="history-empty">No saved conversations</p>';
     return;
   }
 
@@ -231,7 +267,7 @@ function renderHistoryList(filter = '') {
       <div class="history-item-title">${escapeHtml(conv.title)}</div>
       <div class="history-item-meta">
         <span>${conv.messageCount} msgs</span>
-        <button class="history-item-delete" title="Eliminar">Borrar</button>
+        <button class="history-item-delete" title="Delete">Delete</button>
       </div>
     `;
 
@@ -246,10 +282,10 @@ function renderHistoryList(filter = '') {
       e.stopPropagation();
       if (!confirmPending) {
         confirmPending = true;
-        delBtn.textContent = 'Confirmar';
+        delBtn.textContent = 'Confirm';
         delBtn.style.opacity = '1';
         delBtn.style.color = '#f87171';
-        setTimeout(() => { confirmPending = false; delBtn.textContent = 'Borrar'; delBtn.style.color = ''; delBtn.style.opacity = ''; }, 2500);
+        setTimeout(() => { confirmPending = false; delBtn.textContent = 'Delete'; delBtn.style.color = ''; delBtn.style.opacity = ''; }, 2500);
       } else {
         deleteConversation(conv.id);
       }
@@ -277,7 +313,7 @@ function showWelcome() {
   messagesEl.innerHTML = `
     <div class="welcome">
       <h2>Gemma 4 Local</h2>
-      <p>Modelo corriendo 100% en tu Mac. Nada sale de aqui.</p>
+      <p>Running 100% on your Mac. Nothing leaves this machine.</p>
     </div>
   `;
 }
@@ -319,7 +355,7 @@ function renderAllMessages() {
 
       const actionsDiv = document.createElement('div');
       actionsDiv.className = 'message-actions';
-      actionsDiv.innerHTML = `<button class="msg-action-btn copy-btn" title="Copiar">${ICON_COPY} Copiar</button>`;
+      actionsDiv.innerHTML = `<button class="msg-action-btn copy-btn" title="Copy">${ICON_COPY} Copy</button>`;
       div.appendChild(actionsDiv);
 
       const copyBtn = actionsDiv.querySelector('.copy-btn');
@@ -327,10 +363,10 @@ function renderAllMessages() {
       copyBtn.addEventListener('click', () => {
         navigator.clipboard.writeText(content).then(() => {
           copyBtn.classList.add('copied');
-          copyBtn.innerHTML = `${ICON_COPY} Copiado!`;
+          copyBtn.innerHTML = `${ICON_COPY} Copied!`;
           setTimeout(() => {
             copyBtn.classList.remove('copied');
-            copyBtn.innerHTML = `${ICON_COPY} Copiar`;
+            copyBtn.innerHTML = `${ICON_COPY} Copy`;
           }, 2000);
         });
       });
@@ -370,14 +406,14 @@ historySearch.addEventListener('input', () => {
 function renderHistorySearchResults(results, query) {
   historyList.innerHTML = '';
   if (results.length === 0) {
-    historyList.innerHTML = `<p class="history-empty">Sin resultados para "${escapeHtml(query)}"</p>`;
+    historyList.innerHTML = `<p class="history-empty">No results for "${escapeHtml(query)}"</p>`;
     return;
   }
 
   for (const conv of results) {
     const item = document.createElement('div');
     item.className = 'history-item' + (conv.id === currentConvId ? ' active' : '');
-    const matchHint = conv.matchType === 'content' ? ' · en mensajes' : '';
+    const matchHint = conv.matchType === 'content' ? ' · in messages' : '';
     item.innerHTML = `
       <div class="history-item-title">${escapeHtml(conv.title)}</div>
       <div class="history-item-meta">
@@ -469,16 +505,16 @@ function scheduleRender(el, content) {
 
 function formatTime(date) {
   const d = date || new Date();
-  return d.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+  return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 }
 
 function formatDateTime(date) {
   const d = date || new Date();
   const today = new Date();
   const isToday = d.toDateString() === today.toDateString();
-  const time = d.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+  const time = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
   if (isToday) return time;
-  return d.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) + ' ' + time;
+  return d.toLocaleDateString('en-US', { day: 'numeric', month: 'short' }) + ' ' + time;
 }
 
 function addTimestamp(parent, date) {
@@ -520,7 +556,7 @@ function createAssistantMessage() {
   thinkingBlock.className = 'thinking-block hidden';
   const thinkingToggle = document.createElement('div');
   thinkingToggle.className = 'thinking-toggle';
-  thinkingToggle.innerHTML = '<span class="arrow">&#9660;</span> Pensamiento';
+  thinkingToggle.innerHTML = '<span class="arrow">&#9660;</span> Thinking';
   thinkingBlock.appendChild(thinkingToggle);
   const thinkingContent = document.createElement('div');
   thinkingContent.className = 'thinking-content message-content';
@@ -542,8 +578,8 @@ function createAssistantMessage() {
   const actionsDiv = document.createElement('div');
   actionsDiv.className = 'message-actions';
   actionsDiv.innerHTML = `
-    <button class="msg-action-btn copy-btn" title="Copiar">${ICON_COPY} Copiar</button>
-    <button class="msg-action-btn regen-btn" title="Regenerar">${ICON_REGEN} Regenerar</button>
+    <button class="msg-action-btn copy-btn" title="Copy">${ICON_COPY} Copy</button>
+    <button class="msg-action-btn regen-btn" title="Regenerate">${ICON_REGEN} Regenerate</button>
   `;
   actionsDiv.style.display = 'none';
   div.appendChild(actionsDiv);
@@ -704,10 +740,10 @@ async function sendMessage(regenerate = false) {
   copyBtn.addEventListener('click', () => {
     navigator.clipboard.writeText(fullContent).then(() => {
       copyBtn.classList.add('copied');
-      copyBtn.innerHTML = `${ICON_COPY} Copiado!`;
+      copyBtn.innerHTML = `${ICON_COPY} Copied!`;
       setTimeout(() => {
         copyBtn.classList.remove('copied');
-        copyBtn.innerHTML = `${ICON_COPY} Copiar`;
+        copyBtn.innerHTML = `${ICON_COPY} Copy`;
       }, 2000);
     });
   });
@@ -834,7 +870,7 @@ qTemp.addEventListener('click', (e) => {
   pop.className = 'q-popover';
   pop.dataset.type = 'temp';
   pop.innerHTML = `
-    <div class="q-popover-label">Temperatura</div>
+    <div class="q-popover-label">Temperature</div>
     <div class="q-popover-row">
       <input type="range" min="0" max="2" step="0.05" value="${settings.temperature}">
       <span class="q-popover-val">${settings.temperature.toFixed(1)}</span>
@@ -867,7 +903,7 @@ qTokens.addEventListener('click', (e) => {
   pop.className = 'q-popover';
   pop.dataset.type = 'tokens';
   pop.innerHTML = `
-    <div class="q-popover-label">Tokens maximos</div>
+    <div class="q-popover-label">Max tokens</div>
     <div class="q-popover-row">
       <input type="range" min="256" max="8192" step="256" value="${settings.maxTokens}">
       <span class="q-popover-val">${settings.maxTokens >= 1024 ? (settings.maxTokens / 1024) + 'k' : settings.maxTokens}</span>

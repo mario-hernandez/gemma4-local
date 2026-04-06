@@ -5,13 +5,13 @@ const http = require('http');
 const fs = require('fs');
 
 const PORT = 11434;
-// In packaged app: resources are relative to the app. In dev: relative to project root.
-const IS_PACKAGED = app.isPackaged;
-const PROJECT_DIR = IS_PACKAGED
-  ? path.join(require('os').homedir(), '.gemma4-local')
-  : path.join(__dirname, '..');
-const VENV_PATH = path.join(PROJECT_DIR, '.venv', 'bin');
+const PROJECT_DIR = path.join(require('os').homedir(), '.gemma4-local');
+const VENV_DIR = path.join(PROJECT_DIR, '.venv');
+const VENV_PATH = path.join(VENV_DIR, 'bin');
 const MODEL = 'mlx-community/gemma-4-e4b-it-4bit';
+
+// Ensure PROJECT_DIR exists
+if (!fs.existsSync(PROJECT_DIR)) fs.mkdirSync(PROJECT_DIR, { recursive: true });
 
 let mainWindow = null;
 let serverProcess = null;
@@ -50,7 +50,7 @@ function startServer() {
     env: {
       ...process.env,
       PATH: `${VENV_PATH}:${process.env.PATH}`,
-      VIRTUAL_ENV: path.join(__dirname, '..', '.venv')
+      VIRTUAL_ENV: VENV_DIR
     },
     stdio: ['ignore', 'pipe', 'pipe']
   });
@@ -124,7 +124,62 @@ function stopServer() {
   }
 }
 
-// IPC handlers
+// IPC handlers — Setup
+ipcMain.handle('check-setup', () => {
+  const vmlxBin = path.join(VENV_PATH, 'vmlx');
+  return { installed: fs.existsSync(vmlxBin) };
+});
+
+ipcMain.handle('run-setup', () => {
+  return new Promise((resolve, reject) => {
+    const sendProgress = (msg) => {
+      if (mainWindow && !mainWindow.isDestroyed()) {
+        mainWindow.webContents.send('setup-progress', msg);
+      }
+    };
+
+    sendProgress('Creating virtual environment...');
+
+    const createVenv = spawn('python3', ['-m', 'venv', VENV_DIR], {
+      stdio: ['ignore', 'pipe', 'pipe']
+    });
+
+    createVenv.stderr.on('data', (data) => sendProgress(data.toString()));
+
+    createVenv.on('close', (code) => {
+      if (code !== 0) {
+        sendProgress('Error: failed to create virtual environment.');
+        return reject(new Error('venv creation failed'));
+      }
+
+      sendProgress('Virtual environment created. Installing vMLX...');
+
+      const pipBin = path.join(VENV_PATH, 'pip');
+      const installVmlx = spawn(pipBin, ['install', 'vmlx'], {
+        env: {
+          ...process.env,
+          PATH: `${VENV_PATH}:${process.env.PATH}`,
+          VIRTUAL_ENV: VENV_DIR
+        },
+        stdio: ['ignore', 'pipe', 'pipe']
+      });
+
+      installVmlx.stdout.on('data', (data) => sendProgress(data.toString()));
+      installVmlx.stderr.on('data', (data) => sendProgress(data.toString()));
+
+      installVmlx.on('close', (installCode) => {
+        if (installCode !== 0) {
+          sendProgress('Error: failed to install vMLX.');
+          return reject(new Error('pip install vmlx failed'));
+        }
+        sendProgress('vMLX installed successfully!');
+        resolve({ success: true });
+      });
+    });
+  });
+});
+
+// IPC handlers — App
 ipcMain.handle('get-config', () => ({
   port: PORT,
   model: MODEL

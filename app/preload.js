@@ -1,6 +1,11 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('api', {
+  // Setup
+  checkSetup: () => ipcRenderer.invoke('check-setup'),
+  runSetup: () => ipcRenderer.invoke('run-setup'),
+  onSetupProgress: (callback) => ipcRenderer.on('setup-progress', (_, msg) => callback(msg)),
+  // App
   getConfig: () => ipcRenderer.invoke('get-config'),
   startServer: () => ipcRenderer.invoke('start-server'),
   quitApp: () => ipcRenderer.invoke('quit-app'),
