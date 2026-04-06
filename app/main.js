@@ -183,8 +183,13 @@ ipcMain.handle('run-setup', () => {
 
     console.log(`[setup] Using Python: ${python3}`);
     console.log(`[setup] VENV_DIR: ${VENV_DIR}`);
-    console.log(`[setup] FULL_PATH: ${FULL_PATH}`);
-    sendProgress(`Found Python. Creating virtual environment...`);
+    sendProgress(`Found Python at ${python3}. Creating virtual environment...`);
+
+    // Delete old venv if it exists (may have been created with wrong Python)
+    if (fs.existsSync(VENV_DIR)) {
+      fs.rmSync(VENV_DIR, { recursive: true, force: true });
+      sendProgress('Removed old environment. Creating fresh one...');
+    }
 
     const createVenv = spawn(python3, ['-m', 'venv', VENV_DIR], {
       env: { ...process.env, PATH: FULL_PATH },
