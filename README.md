@@ -48,6 +48,12 @@ A native Mac app that lets you chat with Google's Gemma 4 AI model — completel
 
 The first launch downloads the model (~5 GB) from HuggingFace. After that, everything runs locally.
 
+<div align="center">
+<img src="docs/img-island.jpg" width="700" alt="Works without internet — on a desert island, on a plane, anywhere">
+<br>
+<sub>Works without internet. On a desert island, on a plane, at your grandparents' village. If your Mac turns on, your AI works.</sub>
+</div>
+
 ## Benchmarks
 
 Gemma 4 E4B (free, local) vs paid API models:
@@ -59,6 +65,12 @@ Gemma 4 E4B (free, local) vs paid API models:
 | GPQA Diamond | **58.6** | 44.2 | 41.6 |
 
 It beats every paid lightweight model. [See the full comparison →](https://mario-hernandez.github.io/gemma4-local/)
+
+<div align="center">
+<img src="docs/img-freedom.jpg" width="700" alt="$0 per month, forever">
+<br>
+<sub>$0 per month. Forever. No subscriptions, no credit card, no "your free trial has expired".</sub>
+</div>
 
 ## How it works
 
@@ -73,6 +85,12 @@ The app bundles a Python virtual environment with [vMLX](https://github.com/jjan
 | `Enter` | Send message |
 | `Shift+Enter` | New line |
 | `Cmd+Q` | Quit (stops model, frees RAM) |
+
+<div align="center">
+<img src="docs/img-privacy.jpg" width="700" alt="Your data stays in — a bubble only you control">
+<br>
+<sub>Your data stays in. Not Google, not Facebook, not anyone. A bubble only you control.</sub>
+</div>
 
 ## Security audit
 
@@ -98,6 +116,12 @@ rm -rf ~/Desarrollo/vmlx-gemma4-gqck2
 ```
 
 Nothing else is modified. No daemons, no PATH changes, no config files.
+
+<div align="center">
+<img src="docs/img-space.jpg" width="700" alt="Anywhere, anytime — even in space">
+<br>
+<sub>Anywhere. Anytime. Even in space. Well, you might need oxygen before AI up there.</sub>
+</div>
 
 ## Legal
 
