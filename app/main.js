@@ -126,13 +126,13 @@ function stopServer() {
 
 // Find python3 — use embedded Python first, system as fallback
 function findPython3() {
-  // 1. Embedded Python (shipped with the app via extraResources)
+  // 1. Embedded Python (ALWAYS prefer this — shipped with the app)
   const embeddedPacked = path.join(process.resourcesPath || '', 'python', 'bin', 'python3');
   const embeddedDev = path.join(__dirname, '..', 'python-embedded', 'python', 'bin', 'python3');
-  // 2. System Python fallbacks
+  // 2. System Python fallbacks (only if embedded not found)
   const candidates = [
-    embeddedDev,
     embeddedPacked,
+    embeddedDev,
     '/usr/bin/python3',
     '/usr/local/bin/python3',
     '/opt/homebrew/bin/python3',
@@ -199,28 +199,46 @@ ipcMain.handle('run-setup', () => {
         return reject(new Error('venv creation failed'));
       }
 
-      sendProgress('Virtual environment created. Installing vMLX engine (this may take 1-2 minutes)...');
+      sendProgress('Virtual environment created. Updating pip...');
 
-      const pipBin = path.join(VENV_PATH, 'pip');
-      const installVmlx = spawn(pipBin, ['install', 'vmlx'], {
+      // First upgrade pip (old pip can't find packages)
+      const pythonInVenv = path.join(VENV_PATH, 'python3');
+      const upgradePip = spawn(pythonInVenv, ['-m', 'pip', 'install', '--upgrade', 'pip'], {
         env: { ...process.env, PATH: FULL_PATH, VIRTUAL_ENV: VENV_DIR },
         stdio: ['ignore', 'pipe', 'pipe']
       });
 
-      installVmlx.stdout.on('data', (data) => sendProgress(data.toString()));
-      installVmlx.stderr.on('data', (data) => sendProgress(data.toString()));
+      upgradePip.stdout.on('data', (data) => sendProgress(data.toString()));
+      upgradePip.stderr.on('data', (data) => sendProgress(data.toString()));
 
-      installVmlx.on('close', (installCode) => {
-        if (installCode !== 0) {
-          sendProgress('Failed to install vMLX. Check your internet connection and try again.');
-          return reject(new Error('pip install vmlx failed'));
+      upgradePip.on('close', (pipCode) => {
+        if (pipCode !== 0) {
+          sendProgress('Warning: pip upgrade failed, trying install anyway...');
         }
-        sendProgress('Setup complete! Ready to start.');
-        resolve({ success: true });
-      });
-    });
-  });
-});
+
+        sendProgress('Installing vMLX engine (this may take 1-2 minutes)...');
+
+        const pipBin = path.join(VENV_PATH, 'pip');
+        const installVmlx = spawn(pipBin, ['install', 'vmlx'], {
+          env: { ...process.env, PATH: FULL_PATH, VIRTUAL_ENV: VENV_DIR },
+          stdio: ['ignore', 'pipe', 'pipe']
+        });
+
+        installVmlx.stdout.on('data', (data) => sendProgress(data.toString()));
+        installVmlx.stderr.on('data', (data) => sendProgress(data.toString()));
+
+        installVmlx.on('close', (installCode) => {
+          if (installCode !== 0) {
+            sendProgress('Failed to install vMLX. Check your internet connection and try again.');
+            return reject(new Error('pip install vmlx failed'));
+          }
+          sendProgress('Setup complete! Ready to start.');
+          resolve({ success: true });
+        });
+      }); // upgradePip.on close
+    }); // createVenv.on close
+  }); // Promise
+}); // run-setup
 
 // IPC handlers — App
 ipcMain.handle('get-config', () => ({
