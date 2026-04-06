@@ -1,0 +1,64 @@
+{
+  "name": "gemma4-local",
+  "version": "1.0.0",
+  "description": "Chat local con Gemma 4 via vMLX en Apple Silicon",
+  "author": "Mario Hernandez",
+  "main": "app/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --mac",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "build": {
+    "appId": "com.local.gemma4",
+    "productName": "Gemma 4 Local",
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": {
+        "target": "dmg",
+        "arch": "arm64"
+      },
+      "icon": "app/assets/icon.icns",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist"
+    },
+    "dmg": {
+      "background": "build/dmg-bg.png",
+      "icon": "app/assets/icon.icns",
+      "iconSize": 128,
+      "window": {
+        "width": 540,
+        "height": 380
+      },
+      "contents": [
+        {
+          "x": 140,
+          "y": 190,
+          "type": "file"
+        },
+        {
+          "x": 400,
+          "y": 190,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "afterSign": "scripts/notarize.js",
+    "files": [
+      "app/**/*",
+      "node_modules/marked/**/*",
+      "package.json"
+    ]
+  },
+  "devDependencies": {
+    "@electron/notarize": "^2.5.0",
+    "electron": "^35.0.0",
+    "electron-builder": "^26.0.0"
+  },
+  "dependencies": {
+    "marked": "^15.0.0"
+  }
+}

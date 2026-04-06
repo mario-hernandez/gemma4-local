@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gemma 4 Local — IA gratis en tu Mac</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#060608;
+  --surface:#0c0c10;
+  --surface-2:#12121a;
+  --border:#1a1a24;
+  --text:#f0f0f5;
+  --text-2:#9090a0;
+  --text-3:#505060;
+  --blue:#446eff;
+  --blue-2:#2e96ff;
+  --blue-light:#b1c5ff;
+  --blue-dim:rgba(68,110,255,0.08);
+  --blue-border:rgba(68,110,255,0.18);
+  --red-dim:#2a1a1a;
+  --green:#4ade80;
+  --sans:'Inter',system-ui,sans-serif;
+  --mono:'JetBrains Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:var(--blue-light);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;background:rgba(6,6,8,0.8);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.04)}
+.nav-brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px;letter-spacing:-0.02em}
+.nav-brand svg{opacity:0.9}
+.nav-links{display:flex;gap:24px;font-size:13px;color:var(--text-2)}
+.nav-links a{color:var(--text-2);transition:color 0.15s}
+.nav-links a:hover{color:var(--text);text-decoration:none}
+.nav-cta{font-size:13px;font-weight:600;padding:7px 18px;border-radius:6px;background:var(--text);color:var(--bg);transition:opacity 0.15s}
+.nav-cta:hover{opacity:0.85;text-decoration:none}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px;position:relative;overflow:hidden}
+.hero-bg-wrap{position:absolute;top:0;left:0;right:0;height:70%;pointer-events:none;overflow:hidden}
+.hero-bg-img{width:100%;height:100%;object-fit:cover;opacity:0.25;filter:saturate(0.7)}
+.hero-bg-fade{position:absolute;bottom:0;left:0;right:0;height:60%;background:linear-gradient(to top,var(--bg) 0%,transparent 100%)}
+.hero-google{display:flex;align-items:center;gap:14px;margin-bottom:32px}
+.hero-gemma-icon{filter:drop-shadow(0 0 16px rgba(49,134,255,0.3))}
+.hero-google-text{display:flex;align-items:baseline;gap:7px}
+.hero-google-gemma{font-size:18px;color:#888;font-weight:600;letter-spacing:-0.02em}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:20px;border:1px solid var(--blue-border);background:var(--blue-dim);font-size:12px;color:var(--blue-light);margin-bottom:28px;font-family:var(--mono);display:none}
+.hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px rgba(74,222,128,0.5)}
+.hero h1{font-family:var(--sans);font-size:clamp(44px,7vw,76px);font-weight:800;line-height:1.05;letter-spacing:-0.045em;margin-bottom:20px}
+.hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--blue) 0%,var(--blue-light) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:clamp(15px,1.8vw,18px);color:var(--text-2);max-width:520px;line-height:1.65;margin-bottom:36px;font-weight:400}
+.hero-actions{display:flex;gap:12px;align-items:center;margin-bottom:56px}
+.btn-primary{padding:12px 28px;border-radius:8px;background:var(--text);color:var(--bg);font-size:15px;font-weight:600;font-family:var(--sans);border:none;cursor:pointer;transition:all 0.15s;letter-spacing:-0.01em}
+.btn-primary:hover{opacity:0.88;transform:translateY(-1px);text-decoration:none}
+.btn-secondary{padding:12px 28px;border-radius:8px;background:transparent;border:1px solid var(--border);color:var(--text-2);font-size:15px;font-weight:500;font-family:var(--sans);cursor:pointer;transition:all 0.15s}
+.btn-secondary:hover{border-color:var(--text-3);color:var(--text);text-decoration:none}
+.hero-stats{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:48px}
+.hero-stat{text-align:center;padding:0 20px}
+.hero-stat-num{display:block;font-family:var(--sans);font-size:18px;font-weight:700;color:var(--text);letter-spacing:-0.03em}
+.hero-stat-label{font-size:10.5px;color:var(--text-3);margin-top:1px;display:block;font-weight:400}
+.hero-stat-sep{width:1px;height:28px;background:var(--border)}
+
+/* MacBook mockup (photorealistic) */
+.hero-mockup{width:100%;max-width:900px;margin:0 auto}
+.hero-mockup-img{width:100%;height:auto;display:block;filter:drop-shadow(0 20px 60px rgba(0,0,0,0.4))}
+
+/* ── SECTION BASE ── */
+section{padding:100px 24px}
+.section-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;color:var(--blue);margin-bottom:12px}
+.section-title{font-family:var(--sans);font-size:clamp(28px,4.5vw,46px);font-weight:700;letter-spacing:-0.04em;line-height:1.1;margin-bottom:16px}
+.section-sub{font-size:16px;color:var(--text-2);max-width:520px;line-height:1.6;font-weight:300}
+
+/* ── FEATURES ── */
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;max-width:1100px;margin:60px auto 0;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.feature{background:var(--surface);padding:36px 32px}
+.feature-svg{color:var(--blue);margin-bottom:14px;display:block;opacity:0.8}
+.feature h3{font-size:16px;font-weight:600;margin-bottom:8px;letter-spacing:-0.02em}
+.feature p{font-size:13.5px;color:var(--text-2);line-height:1.55}
+
+/* ── BENCHMARKS ── */
+.benchmarks{max-width:1100px;margin:0 auto}
+.bench-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:48px}
+.bench-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:28px 24px}
+.bench-card-title{font-size:14px;font-weight:600;margin-bottom:4px;letter-spacing:-0.01em}
+.bench-card-sub{font-size:11px;color:var(--text-3);margin-bottom:16px;font-family:var(--mono)}
+.bench-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.bench-name{font-size:11px;color:var(--text-3);width:110px;min-width:110px;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bench-name strong{color:var(--text);font-weight:600}
+.bench-bar{flex:1;height:18px;background:var(--surface-2);border-radius:3px;position:relative;overflow:hidden}
+.bench-fill{height:100%;border-radius:3px;background:#1e1e28}
+.bench-fill.hl{background:linear-gradient(90deg,#3360d4,#4a8bff)}
+.bench-score{position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:10px;font-family:var(--mono);font-weight:600;color:var(--text-2)}
+.bench-price{font-size:9px;color:var(--text-3);font-family:var(--mono);margin-left:4px}
+
+/* ── CONVERSATIONS ── */
+.conversations{max-width:1100px;margin:0 auto}
+.conv-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:48px}
+.conv-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color 0.2s}
+.conv-card:hover{border-color:var(--blue-border)}
+.conv-card-header{padding:20px 24px 0;font-size:13px;font-weight:600;letter-spacing:-0.01em;margin-bottom:4px}
+.conv-card-sub{padding:0 24px;font-size:11px;color:var(--text-3);margin-bottom:14px}
+.conv-card-body{padding:0 24px 20px;font-size:12.5px;color:var(--text-2);line-height:1.55}
+.conv-card-body .ai-text{color:var(--text);margin-top:10px}
+.conv-card-body pre{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px;font-size:11px;font-family:var(--mono);margin:8px 0;overflow:hidden;color:#c0c0d0}
+.conv-tag{display:inline-block;padding:2px 7px;border-radius:8px;font-size:9px;font-family:var(--mono);border:1px solid var(--border);color:var(--text-3);margin-right:4px}
+
+/* ── PRIVACY ── */
+.privacy-section{text-align:center;max-width:700px;margin:0 auto}
+.privacy-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px;text-align:left}
+.privacy-item{padding:20px;background:var(--surface);border:1px solid var(--border);border-radius:10px}
+.privacy-item h4{font-size:13px;margin-bottom:6px;font-weight:600}
+.privacy-item p{font-size:12px;color:var(--text-2);line-height:1.5}
+
+/* ── CTA ── */
+.cta{text-align:center;padding:120px 24px;position:relative}
+.cta-glow{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(68,110,255,0.06) 0%,transparent 70%);pointer-events:none}
+.cta h2{font-family:var(--sans);font-size:clamp(32px,5vw,50px);font-weight:700;letter-spacing:-0.04em;margin-bottom:16px;line-height:1.1}
+.cta p{font-size:16px;color:var(--text-2);margin-bottom:32px;font-weight:300}
+.cta-reqs{display:flex;gap:20px;justify-content:center;margin-top:24px;font-size:12px;color:var(--text-3)}
+.cta-reqs span{display:flex;align-items:center;gap:5px}
+
+/* ── FOOTER ── */
+footer{padding:48px 24px;border-top:1px solid var(--border)}
+.footer-inner{max-width:800px;margin:0 auto;text-align:center}
+.footer-logos{margin-bottom:16px;opacity:0.3}
+.footer-main{font-size:12px;color:var(--text-3);margin-bottom:24px}
+.footer-main a{color:var(--text-3)}
+.footer-legal{text-align:left;border-top:1px solid var(--border);padding-top:20px}
+.footer-legal p{font-size:10.5px;color:#3a3a44;line-height:1.55;margin-bottom:8px}
+.footer-legal p:last-child{margin-bottom:0}
+.footer-legal a{color:#4a4a55}
+
+/* ── VISUAL BREAKS ── */
+.visual-break{padding:0;position:relative;overflow:hidden;height:80vh;min-height:500px;display:flex;align-items:flex-end}
+.visual-img-wrap{position:absolute;inset:-20% 0;height:140%}
+.visual-img{width:100%;height:100%;object-fit:cover;opacity:0.85;will-change:transform}
+.visual-caption{position:relative;z-index:2;padding:48px 56px;max-width:600px}
+.visual-caption::before{content:'';position:absolute;inset:0;right:auto;width:120%;background:linear-gradient(to right,rgba(6,6,8,0.92) 0%,rgba(6,6,8,0.6) 60%,transparent 100%);z-index:-1}
+.visual-caption h3{font-size:clamp(26px,4vw,40px);font-weight:800;letter-spacing:-0.04em;margin-bottom:8px;line-height:1.05}
+.visual-caption p{font-size:15px;color:var(--text-2);line-height:1.55;font-weight:400;max-width:420px}
+
+@media(max-width:768px){
+  .visual-break{height:60vh}
+  .visual-caption{padding:24px 28px}
+}
+
+/* ── ANIMATIONS ── */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity 0.6s ease,transform 0.6s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:0.1s}
+.reveal-delay-2{transition-delay:0.2s}
+.reveal-delay-3{transition-delay:0.3s}
+
+@media(max-width:768px){
+  .features{grid-template-columns:1fr}
+  .bench-grid,.conv-grid,.privacy-grid{grid-template-columns:1fr}
+  .nav-links{display:none}
+  .hero-actions{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">
+    <img src="gemma-logo.svg" alt="Gemma" width="20" height="20">
+    Gemma 4
+  </div>
+  <div class="nav-links">
+    <a href="#how">Que hace</a>
+    <a href="#benchmarks">Comparativa</a>
+    <a href="#examples">Ejemplos</a>
+    <a href="#privacy">Privacidad</a>
+  </div>
+  <a href="#download" class="nav-cta">Descargar gratis</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-wrap">
+    <img src="hero-bg.jpg" alt="" class="hero-bg-img">
+    <div class="hero-bg-fade"></div>
+  </div>
+  <div class="hero-google">
+    <img src="gemma-logo.svg" alt="Gemma" width="36" height="36" class="hero-gemma-icon">
+    <div class="hero-google-text">
+      <svg width="68" height="23" viewBox="0 0 272 92" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M115.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18C71.25 34.32 81.24 25 93.5 25s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44S80.99 39.2 80.99 47.18c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z" fill="#666"/><path d="M163.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18c0-12.85 9.99-22.18 22.25-22.18s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44s-12.51 5.46-12.51 13.44c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z" fill="#666"/><path d="M209.75 26.34v39.82c0 16.38-9.66 23.07-21.08 23.07-10.75 0-17.22-7.19-19.66-13.07l8.48-3.53c1.51 3.61 5.21 7.87 11.17 7.87 7.31 0 11.84-4.51 11.84-13v-3.19h-.34c-2.18 2.69-6.38 5.04-11.68 5.04-11.09 0-21.25-9.66-21.25-22.09 0-12.52 10.16-22.26 21.25-22.26 5.29 0 9.49 2.35 11.68 4.96h.34v-3.61h9.25zm-8.56 20.92c0-7.81-5.21-13.52-11.84-13.52-6.72 0-12.35 5.71-12.35 13.52 0 7.73 5.63 13.36 12.35 13.36 6.63 0 11.84-5.63 11.84-13.36z" fill="#666"/><path d="M225 3v65h-9.5V3h9.5z" fill="#666"/><path d="M262.02 54.48l7.56 5.04c-2.44 3.61-8.32 9.83-18.48 9.83-12.6 0-22.01-9.74-22.01-22.18 0-13.19 9.49-22.18 20.92-22.18 11.51 0 17.14 9.16 18.98 14.11l1.01 2.52-29.65 12.28c2.27 4.45 5.8 6.72 10.75 6.72 4.96 0 8.4-2.44 10.92-6.14zm-23.27-7.98l19.82-8.23c-1.09-2.77-4.37-4.7-8.23-4.7-4.95 0-11.84 4.37-11.59 12.93z" fill="#666"/><path d="M35.29 41.19V32H68c.31 1.64.47 3.58.47 5.68 0 7.06-1.93 15.79-8.15 22.01-6.05 6.3-13.78 9.66-24.02 9.66C17.57 69.36 2 54.21 2 35.68S17.57 2 36.3 2c10.41 0 17.81 4.08 23.36 9.37l-6.57 6.57c-3.95-3.7-9.32-6.59-16.79-6.59-13.7 0-24.41 11.05-24.41 24.7s10.72 24.7 24.41 24.7c8.91 0 13.95-3.58 17.21-6.84 2.64-2.64 4.37-6.42 5.06-11.58l-22.28-.04z" fill="#666"/></svg>
+      <span class="hero-google-gemma">Gemma 4</span>
+    </div>
+  </div>
+  <h1>La IA que vive<br>en <em>tu Mac</em></h1>
+  <p class="hero-sub">Una app de chat con inteligencia artificial de Google que funciona completamente en tu ordenador. Sin internet. Sin pagar nada. Nadie lee tus conversaciones.</p>
+  <div class="hero-actions">
+    <a href="#download" class="btn-primary">Descargar gratis</a>
+    <a href="#how" class="btn-secondary">Como funciona</a>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><span class="hero-stat-num">Gratis</span><span class="hero-stat-label">Para siempre</span></div>
+    <div class="hero-stat-sep"></div>
+    <div class="hero-stat"><span class="hero-stat-num">Privada</span><span class="hero-stat-label">Todo en tu Mac</span></div>
+    <div class="hero-stat-sep"></div>
+    <div class="hero-stat"><span class="hero-stat-num">Offline</span><span class="hero-stat-label">Sin internet</span></div>
+    <div class="hero-stat-sep"></div>
+    <div class="hero-stat"><span class="hero-stat-num">1 click</span><span class="hero-stat-label">Para empezar</span></div>
+  </div>
+
+  <!-- MacBook mockup (fotorrealista) -->
+  <div class="hero-mockup">
+    <img src="macbook-mockup.jpg" alt="Gemma 4 Local corriendo en un MacBook Pro" class="hero-mockup-img">
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features" style="text-align:center">
+  <div class="section-label" id="how">Que puedes hacer</div>
+  <div class="section-title">Como ChatGPT,<br>pero en tu Mac.</div>
+  <div class="features">
+    <div class="feature reveal">
+      <svg class="feature-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><line x1="2" y1="2" x2="22" y2="22" stroke-width="1.5"/></svg>
+      <h3>Sin internet</h3>
+      <p>Funciona aunque no tengas WiFi. Puedes usarla en el avion, en el pueblo, donde quieras. Nada sale de tu ordenador.</p>
+    </div>
+    <div class="feature reveal reveal-delay-1">
+      <svg class="feature-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      <h3>Responde rapido</h3>
+      <p>Las respuestas empiezan al instante y se escriben a buena velocidad. No es tan rapida como ChatGPT, pero no necesitas esperar.</p>
+    </div>
+    <div class="feature reveal reveal-delay-2">
+      <svg class="feature-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+      <h3>Entiende fotos y audio</h3>
+      <p>Puedes enviarle una foto y preguntarle que ve. O un audio y pedirle que lo transcriba. No solo entiende texto.</p>
+    </div>
+    <div class="feature reveal">
+      <svg class="feature-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+      <h3>Puede "pensar"</h3>
+      <p>Cuando le pides algo dificil, puede razonar paso a paso antes de responder. Como cuando alguien se para a pensar en vez de contestar lo primero que se le ocurre.</p>
+    </div>
+    <div class="feature reveal reveal-delay-1">
+      <svg class="feature-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4z"/></svg>
+      <h3>Guarda tus charlas</h3>
+      <p>Todas las conversaciones se guardan solas. Puedes buscar algo que le preguntaste hace semanas. Nunca pierdes una buena respuesta.</p>
+    </div>
+    <div class="feature reveal reveal-delay-2">
+      <svg class="feature-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09a1.65 1.65 0 001.51-1 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9c.26.604.852.997 1.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      <h3>Tu la controlas</h3>
+      <p>Puedes hacer que sea mas creativa o mas precisa segun lo que necesites. Los controles estan ahi mismo, sin complicaciones.</p>
+    </div>
+  </div>
+</section>
+
+<!-- VISUAL: Island -->
+<section class="visual-break">
+  <div class="visual-img-wrap">
+    <img src="img-island.jpg" alt="" class="visual-img" loading="lazy">
+  </div>
+  <div class="visual-caption reveal">
+    <h3>Funciona sin internet.</h3>
+    <p>En una isla desierta, en un avion, en el pueblo de tus abuelos. Si tu Mac enciende, tu IA funciona.</p>
+  </div>
+</section>
+
+<!-- BENCHMARKS -->
+<section id="benchmarks">
+  <div class="benchmarks">
+    <div style="text-align:center">
+      <div class="section-label">Rendimiento</div>
+      <div class="section-title">Mas lista que muchos<br>servicios de pago</div>
+      <p class="section-sub" style="margin:16px auto 0">En pruebas estandar de inteligencia, Gemma 4 supera a versiones de pago de ChatGPT, Claude y Mistral. Estas son las puntuaciones oficiales.</p>
+    </div>
+    <div class="bench-grid">
+      <div class="bench-card reveal">
+        <div class="bench-card-title">Saber de todo un poco</div>
+        <div class="bench-card-sub">Test MMLU Pro</div>
+        <div class="bench-row"><span class="bench-name"><strong>Gemma 4 E4B</strong><span class="bench-price">$0</span></span><div class="bench-bar"><div class="bench-fill hl" style="width:92%"></div><span class="bench-score">69.4</span></div></div>
+        <div class="bench-row"><span class="bench-name">Claude 3.5 Haiku<span class="bench-price">$0.80</span></span><div class="bench-bar"><div class="bench-fill" style="width:86%"></div><span class="bench-score">65.0</span></div></div>
+        <div class="bench-row"><span class="bench-name">GPT-4o mini<span class="bench-price">$0.15</span></span><div class="bench-bar"><div class="bench-fill" style="width:84%"></div><span class="bench-score">63.1</span></div></div>
+        <div class="bench-row"><span class="bench-name">Mistral Small<span class="bench-price">$0.20</span></span><div class="bench-bar"><div class="bench-fill" style="width:70%"></div><span class="bench-score">52.9</span></div></div>
+        <div class="bench-row"><span class="bench-name">GPT-3.5 Turbo<span class="bench-price">$0.50</span></span><div class="bench-bar"><div class="bench-fill" style="width:62%"></div><span class="bench-score">47.0</span></div></div>
+      </div>
+      <div class="bench-card reveal reveal-delay-1">
+        <div class="bench-card-title">Escribir codigo</div>
+        <div class="bench-card-sub">Test LiveCodeBench</div>
+        <div class="bench-row"><span class="bench-name"><strong>Gemma 4 E4B</strong><span class="bench-price">$0</span></span><div class="bench-bar"><div class="bench-fill hl" style="width:92%"></div><span class="bench-score">52.0</span></div></div>
+        <div class="bench-row"><span class="bench-name">Claude 3.5 Haiku<span class="bench-price">$0.80</span></span><div class="bench-bar"><div class="bench-fill" style="width:56%"></div><span class="bench-score">31.4</span></div></div>
+        <div class="bench-row"><span class="bench-name">GPT-4o mini<span class="bench-price">$0.15</span></span><div class="bench-bar"><div class="bench-fill" style="width:41%"></div><span class="bench-score">23.4</span></div></div>
+        <div class="bench-row"><span class="bench-name">Mistral Small<span class="bench-price">$0.20</span></span><div class="bench-bar"><div class="bench-fill" style="width:25%"></div><span class="bench-score">14.1</span></div></div>
+      </div>
+      <div class="bench-card reveal">
+        <div class="bench-card-title">Razonar y resolver</div>
+        <div class="bench-card-sub">Test GPQA Diamond</div>
+        <div class="bench-row"><span class="bench-name"><strong>Gemma 4 E4B</strong><span class="bench-price">$0</span></span><div class="bench-bar"><div class="bench-fill hl" style="width:92%"></div><span class="bench-score">58.6</span></div></div>
+        <div class="bench-row"><span class="bench-name">GPT-4o mini<span class="bench-price">$0.15</span></span><div class="bench-bar"><div class="bench-fill" style="width:69%"></div><span class="bench-score">44.2</span></div></div>
+        <div class="bench-row"><span class="bench-name">Claude 3.5 Haiku<span class="bench-price">$0.80</span></span><div class="bench-bar"><div class="bench-fill" style="width:65%"></div><span class="bench-score">41.6</span></div></div>
+        <div class="bench-row"><span class="bench-name">GPT-3.5 Turbo<span class="bench-price">$0.50</span></span><div class="bench-bar"><div class="bench-fill" style="width:44%"></div><span class="bench-score">28.0</span></div></div>
+      </div>
+      <div class="bench-card reveal reveal-delay-1" style="background:transparent;border-style:dashed">
+        <div class="bench-card-title" style="color:var(--text-2)">Siendo honestos</div>
+        <div class="bench-card-sub">Lo que debes saber</div>
+        <div style="font-size:12.5px;color:var(--text-2);line-height:1.65">
+          <p>Los mejores modelos del mundo (los que usan ChatGPT Plus, Claude Pro, Gemini Advanced) son mas listos. Cuestan <strong style="color:var(--text)">entre $20 y $200 al mes</strong> y necesitan internet.</p>
+          <p style="margin-top:10px">Esta app es gratuita, privada y funciona sin conexion. Para el dia a dia, da mas que de sobra. Para tareas muy complejas, los de pago siguen siendo mejores.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VISUAL: Freedom -->
+<section class="visual-break">
+  <div class="visual-img-wrap">
+    <img src="img-freedom.jpg" alt="" class="visual-img" loading="lazy">
+  </div>
+  <div class="visual-caption reveal">
+    <h3>$0 al mes. Para siempre.</h3>
+    <p>Sin suscripciones, sin tarjeta de credito, sin "tu prueba gratuita ha expirado".</p>
+  </div>
+</section>
+
+
+<!-- VISUAL: Privacy -->
+<section class="visual-break">
+  <div class="visual-img-wrap">
+    <img src="img-privacy.jpg" alt="" class="visual-img" loading="lazy">
+  </div>
+  <div class="visual-caption reveal">
+    <h3>Tus datos no salen.</h3>
+    <p>Ni Google, ni Facebook, ni nadie. Una burbuja que solo tu controlas.</p>
+  </div>
+</section>
+
+<!-- PRIVACY -->
+<section id="privacy">
+  <div class="privacy-section">
+    <div class="section-label">Privacidad</div>
+    <div class="section-title">Nadie lee tus<br>conversaciones</div>
+    <p class="section-sub" style="margin:0 auto">Ni Google, ni nosotros, ni nadie. No hay servidor, no hay cuenta, no hay tracking. Tu Mac es todo lo que necesitas.</p>
+    <div class="privacy-grid">
+      <div class="privacy-item reveal">
+        <h4>Sin conexion</h4>
+        <p>El modelo funciona completamente offline. Puedes desconectar el WiFi y seguir chateando.</p>
+      </div>
+      <div class="privacy-item reveal reveal-delay-1">
+        <h4>Sin cuenta</h4>
+        <p>No hay registro, no hay login, no hay email. Abres la app y ya. Sin friccion.</p>
+      </div>
+      <div class="privacy-item reveal reveal-delay-2">
+        <h4>Todo en tu disco</h4>
+        <p>Conversaciones guardadas como JSON en tu carpeta local. Puedes leerlas, copiarlas, borrarlas cuando quieras.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VISUAL: Space -->
+<section class="visual-break">
+  <div class="visual-img-wrap">
+    <img src="img-space.jpg" alt="" class="visual-img" loading="lazy">
+  </div>
+  <div class="visual-caption reveal">
+    <h3>Donde quieras. Cuando quieras.</h3>
+    <p>Incluso en el espacio. Bueno, ahi quizas necesitas oxigeno antes que IA.</p>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta" id="download">
+  <div class="cta-glow"></div>
+  <h2>Pruebala.<br>Es gratis.</h2>
+  <p>Se descarga en 2 minutos. Se instala sola. Y a partir de ahi, la IA es tuya.</p>
+  <a href="https://github.com/mario-hernandez/gemma4-local/releases" class="btn-primary" style="font-size:17px;padding:14px 36px">Descargar para Mac</a>
+  <div class="cta-reqs">
+    <span>&#9679; Mac con chip M1 o superior</span>
+    <span>&#9679; 16 GB de memoria</span>
+    <span>&#9679; macOS 13+</span>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logos">
+      <!-- Google wordmark monocromo -->
+      <svg width="52" height="17" viewBox="0 0 272 92" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M115.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18C71.25 34.32 81.24 25 93.5 25s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44S80.99 39.2 80.99 47.18c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z" fill="#333"/>
+        <path d="M163.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18c0-12.85 9.99-22.18 22.25-22.18s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44s-12.51 5.46-12.51 13.44c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z" fill="#333"/>
+        <path d="M209.75 26.34v39.82c0 16.38-9.66 23.07-21.08 23.07-10.75 0-17.22-7.19-19.66-13.07l8.48-3.53c1.51 3.61 5.21 7.87 11.17 7.87 7.31 0 11.84-4.51 11.84-13v-3.19h-.34c-2.18 2.69-6.38 5.04-11.68 5.04-11.09 0-21.25-9.66-21.25-22.09 0-12.52 10.16-22.26 21.25-22.26 5.29 0 9.49 2.35 11.68 4.96h.34v-3.61h9.25zm-8.56 20.92c0-7.81-5.21-13.52-11.84-13.52-6.72 0-12.35 5.71-12.35 13.52 0 7.73 5.63 13.36 12.35 13.36 6.63 0 11.84-5.63 11.84-13.36z" fill="#333"/>
+        <path d="M225 3v65h-9.5V3h9.5z" fill="#333"/>
+        <path d="M262.02 54.48l7.56 5.04c-2.44 3.61-8.32 9.83-18.48 9.83-12.6 0-22.01-9.74-22.01-22.18 0-13.19 9.49-22.18 20.92-22.18 11.51 0 17.14 9.16 18.98 14.11l1.01 2.52-29.65 12.28c2.27 4.45 5.8 6.72 10.75 6.72 4.96 0 8.4-2.44 10.92-6.14zm-23.27-7.98l19.82-8.23c-1.09-2.77-4.37-4.7-8.23-4.7-4.95 0-11.84 4.37-11.59 12.93z" fill="#333"/>
+        <path d="M35.29 41.19V32H68c.31 1.64.47 3.58.47 5.68 0 7.06-1.93 15.79-8.15 22.01-6.05 6.3-13.78 9.66-24.02 9.66C17.57 69.36 2 54.21 2 35.68S17.57 2 36.3 2c10.41 0 17.81 4.08 23.36 9.37l-6.57 6.57c-3.95-3.7-9.32-6.59-16.79-6.59-13.7 0-24.41 11.05-24.41 24.7s10.72 24.7 24.41 24.7c8.91 0 13.95-3.58 17.21-6.84 2.64-2.64 4.37-6.42 5.06-11.58l-22.28-.04z" fill="#333"/>
+      </svg>
+    </div>
+    <div class="footer-main">
+      Open source bajo <a href="https://opensource.org/licenses/MIT">MIT License</a> &middot; Motor <a href="https://github.com/jjang-ai/vmlx">vMLX</a> &middot; <a href="https://github.com/mario-hernandez/gemma4-local">GitHub</a>
+    </div>
+    <div class="footer-legal">
+      <p><strong>Proyecto independiente.</strong> Este software NO esta desarrollado, mantenido, patrocinado, respaldado ni afiliado de ninguna manera con Google LLC, Alphabet Inc., Google DeepMind, ni ninguna de sus filiales o subsidiarias. El uso de los nombres "Google" y "Gemma" en esta pagina es estrictamente nominativo, con el unico proposito de identificar el modelo de IA con el que esta aplicacion es compatible, conforme a la doctrina de uso nominativo de marcas (nominative fair use).</p>
+      <p><strong>Marcas registradas.</strong> "Google", el logotipo de Google y "Gemma" son marcas registradas de Google LLC. "Apple", "Mac", "MacBook" y "macOS" son marcas registradas de Apple Inc. "ChatGPT" y "GPT" son marcas de OpenAI, Inc. "Claude" es marca de Anthropic, PBC. Todas las demas marcas pertenecen a sus respectivos propietarios. Ninguna marca de terceros es reclamada por el autor de este proyecto.</p>
+      <p><strong>Modelo de IA.</strong> Los pesos del modelo Gemma 4 son propiedad de Google LLC y se distribuyen bajo la licencia <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache 2.0</a>. Esta aplicacion NO redistribuye los pesos del modelo — el usuario los descarga directamente desde los canales oficiales de Google (HuggingFace/Kaggle) bajo su propia aceptacion de los terminos de licencia.</p>
+      <p><strong>Benchmarks.</strong> Las puntuaciones comparativas provienen de fuentes publicas (model cards oficiales, artificialanalysis.ai, llm-stats.com). Los resultados pueden variar segun hardware, configuracion y metodologia de evaluacion. El autor no garantiza la precision de datos de terceros.</p>
+      <p><strong>Sin garantias.</strong> Este software se proporciona "tal cual" (as is), sin garantias de ningun tipo, expresas o implicitas. El autor no se responsabiliza del contenido generado por el modelo, de decisiones tomadas en base a dicho contenido, ni de danos derivados del uso de este software. Consulte con un profesional para decisiones legales, medicas o financieras.</p>
+      <p><strong>Contacto.</strong> Si algun titular de derechos considera que sus marcas se utilizan de forma inadecuada en este proyecto, puede contactar al autor y el contenido sera revisado y modificado o retirado de forma inmediata.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Reveal on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Parallax on visual break images
+const visuals = document.querySelectorAll('.visual-img-wrap');
+let ticking = false;
+window.addEventListener('scroll', () => {
+  if (!ticking) {
+    requestAnimationFrame(() => {
+      const scrollY = window.scrollY;
+      visuals.forEach(wrap => {
+        const rect = wrap.parentElement.getBoundingClientRect();
+        const speed = 0.3;
+        const offset = (rect.top * speed);
+        wrap.style.transform = `translateY(${offset}px)`;
+      });
+      ticking = false;
+    });
+    ticking = true;
+  }
+});
+
+// Counter animation for hero stats
+const statNums = document.querySelectorAll('.hero-stat-num');
+const heroObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.animation = 'countIn 0.6s cubic-bezier(0.16,1,0.3,1) forwards';
+    }
+  });
+}, { threshold: 0.5 });
+statNums.forEach(el => heroObs.observe(el));
+</script>
+<style>
+@keyframes countIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.hero-stat-num { opacity: 0; }
+</style>
+
+</body>
+</html>
