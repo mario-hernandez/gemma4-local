@@ -237,8 +237,28 @@ ipcMain.handle('run-setup', () => {
             sendProgress('Failed to install vMLX. Check your internet connection and try again.');
             return reject(new Error('pip install vmlx failed'));
           }
-          sendProgress('Setup complete! Ready to start.');
-          resolve({ success: true });
+
+          // Fix native libraries: ad-hoc sign all .so and .dylib so macOS allows loading them
+          sendProgress('Finalizing setup...');
+          const fixLibs = spawn('/usr/bin/find', [
+            VENV_DIR, '-name', '*.so', '-o', '-name', '*.dylib'
+          ], { stdio: ['ignore', 'pipe', 'pipe'] });
+
+          let libPaths = '';
+          fixLibs.stdout.on('data', (data) => { libPaths += data.toString(); });
+
+          fixLibs.on('close', () => {
+            const libs = libPaths.split('\n').filter(l => l.trim());
+            let signed = 0;
+            for (const lib of libs) {
+              try {
+                require('child_process').execSync(`/usr/bin/codesign --force --sign - "${lib}" 2>/dev/null`);
+                signed++;
+              } catch {}
+            }
+            sendProgress(`Setup complete! (${signed} libraries prepared)`);
+            resolve({ success: true });
+          });
         });
       }); // upgradePip.on close
     }); // createVenv.on close
