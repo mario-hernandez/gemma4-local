@@ -49,7 +49,7 @@ function startServer() {
   ], {
     env: {
       ...process.env,
-      PATH: `${VENV_PATH}:${process.env.PATH}`,
+      PATH: FULL_PATH,
       VIRTUAL_ENV: VENV_DIR
     },
     stdio: ['ignore', 'pipe', 'pipe']
@@ -124,6 +124,35 @@ function stopServer() {
   }
 }
 
+// Find python3 — Electron apps don't inherit user PATH
+function findPython3() {
+  const candidates = [
+    '/usr/bin/python3',
+    '/usr/local/bin/python3',
+    '/opt/homebrew/bin/python3',
+    '/Library/Frameworks/Python.framework/Versions/Current/bin/python3',
+    '/Library/Frameworks/Python.framework/Versions/3.11/bin/python3',
+    '/Library/Frameworks/Python.framework/Versions/3.12/bin/python3',
+    '/Library/Frameworks/Python.framework/Versions/3.13/bin/python3',
+  ];
+  for (const p of candidates) {
+    if (fs.existsSync(p)) return p;
+  }
+  return null;
+}
+
+// Full PATH for spawned processes (Electron strips it)
+const FULL_PATH = [
+  VENV_PATH,
+  '/usr/local/bin',
+  '/opt/homebrew/bin',
+  '/usr/bin',
+  '/bin',
+  '/usr/sbin',
+  '/sbin',
+  process.env.PATH || ''
+].join(':');
+
 // IPC handlers — Setup
 ipcMain.handle('check-setup', () => {
   const vmlxBin = path.join(VENV_PATH, 'vmlx');
@@ -138,9 +167,16 @@ ipcMain.handle('run-setup', () => {
       }
     };
 
-    sendProgress('Creating virtual environment...');
+    const python3 = findPython3();
+    if (!python3) {
+      sendProgress('Python 3 not found. Please install it from python.org or via Xcode Command Line Tools (xcode-select --install).');
+      return reject(new Error('python3 not found'));
+    }
 
-    const createVenv = spawn('python3', ['-m', 'venv', VENV_DIR], {
+    sendProgress(`Found Python at ${python3}. Creating virtual environment...`);
+
+    const createVenv = spawn(python3, ['-m', 'venv', VENV_DIR], {
+      env: { ...process.env, PATH: FULL_PATH },
       stdio: ['ignore', 'pipe', 'pipe']
     });
 
@@ -148,19 +184,15 @@ ipcMain.handle('run-setup', () => {
 
     createVenv.on('close', (code) => {
       if (code !== 0) {
-        sendProgress('Error: failed to create virtual environment.');
+        sendProgress('Failed to create virtual environment. Try running: xcode-select --install');
         return reject(new Error('venv creation failed'));
       }
 
-      sendProgress('Virtual environment created. Installing vMLX...');
+      sendProgress('Virtual environment created. Installing vMLX engine (this may take 1-2 minutes)...');
 
       const pipBin = path.join(VENV_PATH, 'pip');
       const installVmlx = spawn(pipBin, ['install', 'vmlx'], {
-        env: {
-          ...process.env,
-          PATH: `${VENV_PATH}:${process.env.PATH}`,
-          VIRTUAL_ENV: VENV_DIR
-        },
+        env: { ...process.env, PATH: FULL_PATH, VIRTUAL_ENV: VENV_DIR },
         stdio: ['ignore', 'pipe', 'pipe']
       });
 
@@ -169,10 +201,10 @@ ipcMain.handle('run-setup', () => {
 
       installVmlx.on('close', (installCode) => {
         if (installCode !== 0) {
-          sendProgress('Error: failed to install vMLX.');
+          sendProgress('Failed to install vMLX. Check your internet connection and try again.');
           return reject(new Error('pip install vmlx failed'));
         }
-        sendProgress('vMLX installed successfully!');
+        sendProgress('Setup complete! Ready to start.');
         resolve({ success: true });
       });
     });
